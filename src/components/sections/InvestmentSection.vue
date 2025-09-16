@@ -309,7 +309,7 @@ const toggleMore = () => {
   }
 
   &__filters-label {
-    max-width: 64%;
+    max-width: 55%;
     font-family: 'Agatho';
     font-weight: 500;
     font-size: vw(26);

@@ -8,7 +8,6 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import fixTextPlugin from "./src/plugins/fix-text"
 
-
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [

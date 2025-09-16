@@ -7,7 +7,8 @@
   <DeliversSection id="residents" />
   <GallerySection />
   <InvestmentSection />
-  <CalculatorSection id="calculator" />
+  <!-- <CalculatorSection id="calculator" /> -->
+  <CalculatorSectionCloud id="calculator" />
   <AnalysisSection />
   <DecorSection />
   <PerfomanceSection id="location" />
@@ -17,6 +18,11 @@
   <Transition name="fade">
     <AppForm v-if="isOpenModal" @closeForm="toggleForm" />
   </Transition>
+  <!-- <AppTest /> -->
+  <!-- <AppTestCloud /> -->
+  <!-- <iframe src="https://ths.li/i0JobSQ" frameborder="0" allowfullscreen allow="fullscreen; vr; accelerometer; gyroscope;"
+    style="width: 100%; height: 600px;">
+  </iframe> -->
 </template>
 
 <script setup lang="ts">
@@ -33,6 +39,9 @@ import DocumentationSection from '@/components/sections/DocumentationSection.vue
 import SecureSection from '@/components/sections/SecureSection.vue';
 import AppFooter from '@/components/AppFooter.vue';
 import AppForm from '@/components/AppForm.vue';
+import AppTest from '@/components/AppTest.vue';
+import AppTestCloud from '@/components/AppTestCloud.vue';
+import CalculatorSectionCloud from '@/components/sections/CalculatorSectionCloud.vue';
 import { ref } from 'vue';
 
 const isOpenModal = ref(false);

@@ -294,8 +294,8 @@ const toggleMenu = () => {
   }
 
   &__description {
-    margin-bottom: vw(-6);
-    margin-right: vw(180);
+    margin-bottom: vw(-18);
+    margin-right: vw(280);
     grid-column: 1;
     grid-row: 1;
     align-self: end;

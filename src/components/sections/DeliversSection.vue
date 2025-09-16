@@ -171,8 +171,8 @@ register();
     grid-column: 1;
     position: relative;
     margin-left: auto;
-    bottom: vw(-20);
-    right: vw(50);
+    bottom: vw(-26);
+    right: vw(70);
 
     @include mobile {
       font-size: vmin(32);
@@ -212,7 +212,14 @@ register();
     position: relative;
     overflow: hidden;
     padding: vw(20);
+    padding-top: vw(50);
+    padding-left: vw(10);
+    padding-right: vw(10);
+    // padding-left: vw(45);
+    // padding-right: vw(0);
     margin: vw(-20);
+    margin-left: vw(-45);
+    margin-right: vw(-45);
 
     @include mobile {
       padding: vmin(10);

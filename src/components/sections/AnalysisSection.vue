@@ -15,7 +15,7 @@
     <div class="analysis__content">
       <div class="analysis__tile">
         <div class="analysis__tile-item" v-for="item in places" :key="item.id">
-          <span class="analysis__time">{{ readTime(item.id) }}</span>
+          <span class="analysis__time">{{ readTime(item) }}</span>
           <p class="analysis__place" v-dompurify-html="item.title" />
           <p class="analysis__benefit">{{ item.description }}</p>
         </div>
@@ -46,8 +46,9 @@
             v-for="filter in filters" :key="filter.id" @click="changeActiveFilter(filter.id)">{{ filter.label }}</span>
         </div>
         <div class="analysis__map_map">
-          <AppMap ref="mapElement" :filters="filters" :activeFilter="activeFilter"
-            @changeActiveFilter="changeActiveFilter" :changeActiveFilter="changeActiveFilter" />
+          <AppMap ref="mapElement" :filters="filters" :places="places" :centerMarker="centerMarker"
+            :activeFilter="activeFilter" @changeActiveFilter="changeActiveFilter"
+            :changeActiveFilter="changeActiveFilter" />
         </div>
       </div>
     </div>
@@ -57,10 +58,24 @@
 <script setup lang="ts">
 
 import { onMounted, ref } from 'vue';
+import logoMap from "@/assets/images/logo-map.svg"
+import iconBeach from "@/assets/images/maps/iconBeach.svg"
+import iconMall from "@/assets/images/maps/iconMall.svg"
+import iconPlus from "@/assets/images/maps/iconPlus.svg"
+import iconSchool from "@/assets/images/maps/iconSchool.svg"
 import AppMap from '../AppMap.vue';
 import type { IFilterMap } from '@/utils/types';
 
-const activeFilter = ref<string | null>(null)
+interface IMarker {
+  id: string,
+  type: string | any,
+  position: { lat: number, lng: number },
+  icon: any,
+  distance?: string | null,
+  default?: boolean
+}
+
+const activeFilter = ref<string | null>("BY CAR")
 
 const filters = [
   { label: "WALKABLE", value: "walk", id: 'walk' },
@@ -68,44 +83,154 @@ const filters = [
   { label: "BY CAR", value: "car", id: 'car' }
 ]
 
+const centerMarker: IMarker = {
+  id: "",
+  type: "walk",
+  position: { lat: -8.701024719020094, lng: 115.25534786657671 },
+  icon: logoMap,
+  default: true
+}
+
 const places = [
+  {
+    id: "Sanur Beach",
+    title: "Sanur Beach",
+    description: "",
+    position: { lat: -8.706742303445766, lng: 115.2635888695486 },
+    type: [
+      { key: "BY CAR", time: '4 min' },
+      { key: "FREE SHUTTLE", time: '7 min' },
+    ],
+    icon: iconBeach,
+  },
   {
     id: "Bali international school",
     title: "Bali International School",
     description: "Drives family rentals and long-term value.",
+    position: { lat: -8.679353197943632, lng: 115.25703407690618 },
+    type: [
+      { key: "BY CAR", time: '8 min' },
+    ],
+    icon: iconSchool,
   },
   {
     id: "Internacional hospital",
     title: "International Hospital",
     description: "Attraction point for medical tourism.",
+    position: { lat: -8.679130228085594, lng: 115.25919376552032 },
+    type: [
+      { key: "BY CAR", time: '7 min' },
+    ],
+    icon: iconPlus,
   },
   {
     id: "Icon Bali mall",
     title: "ICON<br />BALI Mall",
     description: "Upscale retail adds lifestyle value and convenience.",
+    position: { lat: -8.68720826827467, lng: 115.26298358286074 },
+    type: [
+      { key: "BY CAR", time: '10 min' },
+      { key: "FREE SHUTTLE", time: '15 min' },
+    ],
+    icon: iconMall,
   },
   {
-    id: "Sanur beach",
-    title: "Sanur Beach",
-    description: "Safe, family-friendly, and always in demand.",
+    id: "Sanur Harbour",
+    title: "Sanur Harbour",
+    description: "",
+    position: { lat: -8.669216991053066, lng: 115.26078649716372 },
+    type: [
+      { key: "BY CAR", time: '10 min' },
+    ],
+    icon: iconBeach,
   },
   {
-    id: "Local Markets",
-    title: "Local Markets & Dining",
-    description: "Authentic Bali vibes that guests love.",
-  }
+    id: "Mertasari Harbour",
+    title: "Mertasari Harbour",
+    description: "",
+    position: { lat: -8.712649283299177, lng: 115.25295758848726 },
+    type: [
+      { key: "BY CAR", time: '6 min' },
+    ],
+    icon: iconBeach,
+  },
+  {
+    id: "Popular Market",
+    title: "Popular Market",
+    description: "",
+    position: { lat: -8.706643230641982, lng: 115.25933989195545 },
+    type: [
+      { key: "BY CAR", time: '3 min' },
+      { key: "FREE SHUTTLE", time: '6 min' },
+    ],
+    icon: iconMall,
+  },
+  {
+    id: "The Garden Early Learning",
+    title: "The Garden Early Learning",
+    description: "",
+    position: { lat: -8.69848245980248, lng: 115.25429014671812 },
+    type: [
+      { key: "WALKABLE", time: '8 min' }
+    ],
+    icon: iconSchool,
+  },
+  {
+    id: "LITTLE STARS KINDERGARDEN",
+    title: "Little Stars Kindergarden",
+    description: "",
+    position: { lat: -8.7005392254747, lng: 115.25533214683286 },
+    type: [
+      { key: "WALKABLE", time: '2 min' }
+    ],
+    icon: iconSchool,
+  },
+  {
+    id: "RUMAH KECIL KIDS CENTER",
+    title: "Rumah Kecil Kids Center",
+    description: "",
+    position: { lat: -8.700488956945652, lng: 115.25570133851144 },
+    type: [
+      { key: "WALKABLE", time: '2 min' }
+    ],
+    icon: iconSchool,
+  },
+  // {
+  //   id: "Local Markets",
+  //   title: "Local Markets & Dining",
+  //   description: "Authentic Bali vibes that guests love.",
+  // }
 ]
 
 const mapElement = ref()
 
-const readTime = (id: string) => {
-  return mapElement.value?.markers.reduce((acc: string, m: any) => {
-    if (m.id === id) {
-      acc = m.travelTime
-      return m.travelTime
+// const readTime = (item: IMarker) => {
+//   // console.log(item.type, activeFilter.value)
+//   if (Array.isArray(item.type)) {
+//     const res = item.type.find((m: any) => m.key === activeFilter.value)
+//     if (res) {
+//       console.log(item.type, activeFilter.value, res)
+//       return res.time
+//     }
+//     console.log(res.time)
+//     return res ? res.time : 'dwad'
+//   }
+//   // return Array.isArray(item.type) ? item.type.find((m: any) => m.key === activeFilter.value)?.time : ''
+// }
+
+const readTime = (item: IMarker) => {
+  if (Array.isArray(item.type)) {
+    const res = item.type.find(
+      (m: any) => m.key.trim().toLowerCase() === activeFilter.value?.trim().toLowerCase()
+    )
+    // const res = item.type.find((m: any) => m.key === activeFilter.value)
+    if (res) {
+      console.log(item.type, activeFilter.value, res)
+      return res.time
     }
-    return acc
-  }, '')
+    return 'dwad' // или дефолтное значение
+  }
+  return ''
 }
 
 const changeActiveFilter = (id: string) => {
@@ -128,7 +253,7 @@ onMounted(() => {
 
   &__header {
     display: grid;
-    grid-template-columns: 1fr 29%;
+    grid-template-columns: 1fr 30%;
     justify-content: space-between;
     margin-bottom: vw(60);
 
@@ -143,7 +268,6 @@ onMounted(() => {
     width: fit-content;
     grid-row: 1 / 3;
     grid-column: 1;
-    width: min-content;
   }
 
   &__heading {
@@ -172,7 +296,7 @@ onMounted(() => {
 
     display: inline-block;
     margin-left: auto;
-    margin-right: vw(-30);
+    margin-right: vw(-43);
     margin-top: vw(-32);
 
     @include mobile {
@@ -203,6 +327,7 @@ onMounted(() => {
   &__tile {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
 
     @include mobile {
       grid-template-columns: repeat(2, 1fr);
@@ -284,6 +409,18 @@ onMounted(() => {
     }
   }
 
+  &__tile-item:nth-child(odd) {
+    @include mobile {
+      z-index: 6 !important;
+    }
+  }
+
+  &__tile-item:nth-child(even) {
+    @include mobile {
+      z-index: 5 !important;
+    }
+  }
+
   &__tile-item:nth-child(2n) {
     margin-left: vw(-10);
     padding-left: vw(35);
@@ -310,16 +447,19 @@ onMounted(() => {
     border-radius: vw(53);
     display: flex;
     width: fit-content;
+    z-index: 5;
 
     @include mobile {
-      right: vmin(6);
-      top: vmin(6);
+      right: vmin(10);
+      top: vmin(-5);
       padding: vmin(5) vmin(6);
-      font-size: vmin(8);
-      line-height: vmin(7);
-      border-radius: vmin(33);
+      font-size: vmin(9);
+      line-height: vmin(8);
+      border-radius: vmin(46);
+      z-index: 5;
     }
   }
+
 
   &__place {
 

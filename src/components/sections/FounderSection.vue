@@ -25,7 +25,7 @@
         <span class="founder__subheading"><span class="montecarloscriptb">W</span>e are</span>
       </div>
       <div class="founder__image">
-        <img src="@/assets/images/founder.png" alt="founder" class="founder__img">
+        <img src="@/assets/images/GEORGY.jpg" alt="GEORGY" class="founder__img">
       </div>
       <div class="founder__description">
         <span class="founder__symbol">”</span>

@@ -3,7 +3,7 @@
     <!-- Карта -->
     <GMapMap ref="mapRef" :center="center" :zoom="16" map-type-id="terrain" style="width: 100%; height: 100%"
       :options="mapOptions" @tilesloaded="onMapReady">
-      <GMapMarker ref="markerMap" class="marker" v-for="marker in [...markers, centerMarker]" :key="marker.id"
+      <GMapMarker ref="markerMap" class="marker" v-for="marker in [...places, centerMarker]" :key="marker.id"
         :position="marker.position" :icon="getIcon(marker)" @click="clickMarker()"
         :label="marker.id === activeMarkerId ? marker.travelTime : ''">
         <!-- тултип через OverlayView -->
@@ -37,13 +37,15 @@ import AppMapTooltip from './AppMapTooltip.vue'
 
 interface IProps {
   filters: IFilterMap[],
+  places: IMarker[],
   activeFilter: string | null,
+  centerMarker?: IMarker,
   changeActiveFilter: (id: string) => void
 }
 
 interface IMarker {
   id: string,
-  type: string,
+  type: string | any,
   position: { lat: number, lng: number },
   icon: any,
   travelTime?: string | null,
@@ -339,15 +341,39 @@ const clickMarker = () => {
   // console.log(markerMap.value)
 }
 
-function getIcon(marker: any) {
-  const size = marker.default ? 48 : 28  // ширина в пикселях
-  const anchor = size / 2                        // центрирование по горизонтали
+// TODO: для динамических данных из гугла
+// function getIcon(marker: any) {
+//   const size = marker.default ? 48 : 28  // ширина в пикселях
+//   const anchor = size / 2                        // центрирование по горизонтали
+
+//   return {
+//     url: marker.id === props.activeFilter ? pinMapActive : marker.icon,
+//     scaledSize: { width: size, height: size },
+//     anchor: { x: anchor, y: size }
+//   }
+// }
+
+function getIcon(marker: IMarker) {
+  const size = marker.default ? 48 : 28
+  const anchor = size / 2
+
+  // const isActive = props.activeFilter && marker.type === props.activeFilter
+
+  // return {
+  //   url: isActive ? pinMapActive : marker.icon,
+  //   scaledSize: { width: size, height: size },
+  //   anchor: { x: anchor, y: size }
+  // }
+
+  const isActive = props.activeFilter && marker.type === props.activeFilter
 
   return {
-    url: marker.id === props.activeFilter ? pinMapActive : marker.icon,
+    url: marker.icon,
     scaledSize: { width: size, height: size },
     anchor: { x: anchor, y: size }
   }
+
+
 }
 
 function createOverlay(marker: IMarker) {
@@ -405,10 +431,10 @@ function createOverlay(marker: IMarker) {
 }
 
 watch(() => props.activeFilter, async () => {
-  await calculateDistances()
+  // await calculateDistances()
 })
 
-// пересчет расстояний
+// пересчет расстояний из google api
 async function calculateDistances() {
   if (!window.google || !window.google.maps || !props.activeFilter) return
   const modeMap: Record<string, google.maps.TravelMode> = {
@@ -443,8 +469,8 @@ const onMapReady = () => {
   if (!mapRef.value?.$mapObject) return
 
   if (!isMapLoaded.value) {
-    calculateDistances()
-    markers.forEach(marker => createOverlay(marker))
+    // calculateDistances()
+    props.places.forEach(marker => createOverlay(marker))
     isMapLoaded.value = true
   }
 }

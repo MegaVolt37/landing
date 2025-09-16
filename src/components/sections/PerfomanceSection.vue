@@ -123,8 +123,10 @@ import UiButton from '../ui/uiButton.vue';
 
     display: inline-block;
     margin-left: auto;
-    margin-top: vw(-65);
-    margin-right: vw(-55);
+    margin-top: vw(-34);
+    margin-right: vw(149);
+
+    // TODO: continue pixel perfect
 
     @include mobile {
       font-size: vmin(32);
