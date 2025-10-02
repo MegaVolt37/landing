@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MainSection />
+    <MainSection @openForm="toggleForm" />
     <FounderSection id="about" />
   </div>
 

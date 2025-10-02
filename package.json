@@ -21,9 +21,13 @@
     "axios": "^1.11.0",
     "element-plus": "^2.11.1",
     "gsap": "^3.13.0",
+    "imask": "^7.6.1",
     "swiper": "^11.2.10",
+    "vee-validate": "^4.15.1",
     "vue": "^3.5.20",
-    "vue-dompurify-html": "^5.3.0"
+    "vue-dompurify-html": "^5.3.0",
+    "vue-the-mask": "^0.11.1",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",

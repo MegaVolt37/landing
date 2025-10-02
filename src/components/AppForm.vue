@@ -1,17 +1,24 @@
 <template>
   <div class="modal">
     <div class="modal__content">
-
       <div class="modal__container" ref="modalContainer">
-        <span class="modal__close" @click="$emit('closeForm')"><img src="@/assets/images/close.svg" alt="close"></span>
+        <span class="modal__close" @click="$emit('closeForm')"><img src="@/assets/images/close.svg"
+            alt="close" /></span>
         <div class="form">
           <p class="form__title">Fill the form below and we'll contact you as soon as possible</p>
           <form class="form__form">
-            <el-input class="form__field" v-model="formData.name" placeholder="Please input" />
-            <el-input class="form__field" v-model="formData.phone" placeholder="Please input" />
-            <el-checkbox class="form__checkbox" label="By clicking the button, you agree to the privacy policy"
-              :value="formData.checked" />
-            <UiButton class="form__button" variant="solid-yellow" shape="rounded" size="lg">Start Investment</UiButton>
+            <el-input class="form__field" v-model="name" v-bind="nameAttrs" placeholder="Contact Person" />
+            <el-input class="form__field" v-model="phone" placeholder="+62 81 245 555 555"
+              v-mask="'+## ### #### ####'" />
+            <el-checkbox class="form__checkbox" label="" v-model="checked">
+              <span>By clicking the button, you
+                agree to <a href="https://labnacapital.com/privacy-policy" target="_blank"
+                  rel="noopener noreferrer">privacy police</a>, <a href="https://labnacapital.com/cookies-policy"
+                  target="_blank" rel="noopener noreferrer">cookies policy</a> & <a
+                  href="https://labnacapital.com/terms-of-use" target="_blank" rel="noopener noreferrer">terms of
+                  use</a>.</span></el-checkbox>
+            <UiButton class="form__button" variant="solid-yellow" shape="rounded" size="lg" @click.prevent="sendForm">
+              Start Investment</UiButton>
           </form>
         </div>
         <div class="modal__background"></div>
@@ -21,24 +28,59 @@
 </template>
 
 <script setup lang="ts">
-import { onClickOutside } from '@vueuse/core';
-import { ref } from 'vue';
+import { onClickOutside } from '@vueuse/core'
+import axios from 'axios'
+import { ref } from 'vue'
+import { useForm } from 'vee-validate'
+import * as yup from 'yup'
+import { api } from '@/composables/apiUrl'
+
+const parsePhoneNumber = (phone: any) => {
+  return phone.replace(/\s/g, '') // Удаляем все пробелы
+}
+
+const schema = yup.object({
+  name: yup.string().required(),
+  phone: yup
+    .string()
+    .required('Номер телефона обязателен')
+    .matches(/^\+\d{2}\s\d{3}\s\d{4}\s\d{4}$/, 'Формат телефона: +XX XXX XXX XXX'),
+  // .matches(/^\+62\s\d{3}\s\d{4}\s\d{4}$/, 'Формат телефона: +62 81 245 555 555'),
+  checked: yup.boolean().oneOf([true], 'You must accept the terms and conditions'),
+})
 
 const emit = defineEmits(['closeForm'])
 
-const formData = ref({
-  name: '',
-  phone: '',
-  checked: true
+const { defineField, handleSubmit } = useForm<yup.InferType<typeof schema>>({
+  validationSchema: schema,
+  initialValues: {
+    checked: false,
+  },
+})
+
+const [name, nameAttrs] = defineField('name')
+const [phone, phoneAttrs] = defineField('phone')
+const [checked, checkedAttrs] = defineField('checked')
+console.log(import.meta.env.VITE_API_URL)
+
+const sendForm = handleSubmit(async (values) => {
+  const { checked, ...data } = values
+  try {
+    const parsedData = {
+      ...data,
+      phone: parsePhoneNumber(data.phone),
+    }
+    await api.post(`/mail/send`, parsedData)
+
+    emit('closeForm')
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 const modalContainer = ref<HTMLElement>()
 
-onClickOutside(
-  modalContainer,
-  event => emit('closeForm'),
-  { ignore: ['.header__burger'] },
-)
+onClickOutside(modalContainer, (event) => emit('closeForm'), { ignore: ['.header__burger'] })
 </script>
 
 <style scoped lang="scss">
@@ -52,7 +94,7 @@ onClickOutside(
   display: grid;
   justify-items: center;
   align-items: center;
-  background-color: #0A0A0A33;
+  background-color: #0a0a0a33;
   backdrop-filter: blur(8.7px);
   padding: vw(20);
 
@@ -105,8 +147,6 @@ onClickOutside(
     width: 100%;
     margin: 0 auto;
 
-
-
     @include mobile {
       padding: vmin(15);
       gap: vmin(10);
@@ -148,11 +188,13 @@ onClickOutside(
 }
 
 .form {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   justify-content: space-between;
   padding-bottom: vw(90);
 
   @include mobile {
+    display: flex;
     flex-direction: column;
     padding-bottom: vmin(70);
     gap: vmin(30);
@@ -249,14 +291,23 @@ onClickOutside(
       font-size: vw(12);
       line-height: 100%;
       letter-spacing: 0px;
-      color: #B4B5B6;
+      color: #b4b5b6;
+      text-wrap: balance;
 
       @include mobile {
         text-wrap: balance;
         font-size: vmin(12);
         padding-left: vmin(15);
       }
+    }
 
+    &:deep(.el-checkbox__label a) {
+      color: #b4b5b6;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     &:deep(.el-checkbox__inner:after) {
@@ -270,10 +321,9 @@ onClickOutside(
       }
     }
 
-    &:deep(.el-checkbox__input.is-checked+.el-checkbox__label) {
-      color: #B4B5B6;
+    &:deep(.el-checkbox__input.is-checked + .el-checkbox__label) {
+      color: #b4b5b6;
     }
-
   }
 
   &__button {
