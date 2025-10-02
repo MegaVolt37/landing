@@ -14,7 +14,9 @@
 
         <div class="header__actions">
           <span class="header__lang">en</span>
-          <UiButton class="header__btn" variant="solid-yellow" shape="rounded" size="lg">Contact us</UiButton>
+          <UiButton class="header__btn" variant="solid-yellow" shape="rounded" size="lg" @click="$emit('openForm')">
+            Contact us
+          </UiButton>
         </div>
       </header>
       <div class="main-info">
@@ -60,6 +62,7 @@ import MainMenu from './main/mainMenu.vue';
 const isOpenMenu = ref(false)
 
 const toggleMenu = () => {
+  console.log('1')
   isOpenMenu.value = !isOpenMenu.value
   if (document.body && document.body.style) {
     document.body.style.overflow = isOpenMenu.value ? 'hidden' : ''
