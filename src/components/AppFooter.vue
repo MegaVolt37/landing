@@ -2,12 +2,14 @@
   <footer class="footer">
     <div class="footer__top">
       <div class="footer__contact">
-        <a class="footer__link footer__link--phone" href="tel:+6281245555555" target="_blank"
-          rel="noopener noreferrer">+62 81 245 555 555</a>
-        <a class="footer__link footer__link--email" href="mailto:hello@labna.capital" target="_blank"
-          rel="noopener noreferrer">hello@labna.capital</a>
-        <p class="footer__address">Jl. Tirta Ening No.8, Sanur Kauh, Denpasar Selatan, Kota Denpasar, Bali, Indonesia
-        </p>
+        <a class="footer__link footer__link--phone" href="tel:+6281139408858" target="_blank"
+          rel="noopener noreferrer">+62 811 3940 8858</a>
+        <a class="footer__link footer__link--email" href="mailto:hello@labnacapital.com" target="_blank"
+          rel="noopener noreferrer">hello@labnacapital.com</a>
+        <div>
+          <p class="footer__address">Jalan Sunset Road Nomor 819,Seminyak, Kec. Kuta, Kabupaten Badung, Bali 80361</p>
+          <!-- <p class="footer__address">#02-01, Singapore</p> -->
+        </div>
       </div>
 
       <div class="footer__logo">
@@ -23,19 +25,22 @@
 
     <div class="footer__bottom">
       <div class="footer__policies">
-        <a class="footer__policy-link" href="#" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-        <a class="footer__policy-link" href="#" target="_blank" rel="noopener noreferrer">Cookie Policy</a>
+        <a class="footer__policy-link" href="https://labnacapital.com/privacy-policy" target="_blank"
+          rel="noopener noreferrer">Privacy Policy</a>
+        <a class="footer__policy-link" href="https://labnacapital.com/cookies-policy" target="_blank"
+          rel="noopener noreferrer">Cookie Policy</a>
       </div>
 
       <div class="footer__social">
-        <a class="footer__social-link" href="#" target="_blank" rel="noopener noreferrer"><img
-            src="@/assets/images/instagram.svg" alt="instagram"></a>
-        <a class="footer__social-link" href="#" target="_blank" rel="noopener noreferrer"><img
-            src="@/assets/images/telegram.svg" alt="telegram"></a>
-        <a class="footer__social-link" href="#" target="_blank" rel="noopener noreferrer"><img
+        <a class="footer__social-link"
+          href="https://www.instagram.com/verdana.sanur?igsh=MWQwNWQ2NHAzNDhlbQ%3D%3D&utm_source=qr" target="_blank"
+          rel="noopener noreferrer"><img src="@/assets/images/instagram.svg" alt="instagram"></a>
+        <!-- <a class="footer__social-link" href="#" target="_blank" rel="noopener noreferrer"><img
+            src="@/assets/images/telegram.svg" alt="telegram"></a> -->
+        <a class="footer__social-link" href="https://wa.me/6281139408858" target="_blank" rel="noopener noreferrer"><img
             src="@/assets/images/whatsapp.svg" alt="whatsapp"></a>
-        <a class="footer__social-link" href="#" target="_blank" rel="noopener noreferrer"><img
-            src="@/assets/images/facebook.svg" alt="facebook"></a>
+        <a class="footer__social-link" href="https://www.facebook.com/share/1XWSL26nF2/?mibextid=wwXIfr" target="_blank"
+          rel="noopener noreferrer"><img src="@/assets/images/facebook.svg" alt="facebook"></a>
       </div>
     </div>
   </footer>
@@ -210,7 +215,7 @@
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
     font-size: vw(18);
-    line-height: 130%;
+    line-height: 1.2;
     letter-spacing: 0%;
     text-decoration: underline;
     text-decoration-style: solid;

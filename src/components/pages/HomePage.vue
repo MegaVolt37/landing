@@ -6,12 +6,12 @@
 
   <DeliversSection id="residents" />
   <GallerySection />
-  <InvestmentSection />
+  <InvestmentSection v-if="!isProduction" />
   <!-- <CalculatorSection id="calculator" /> -->
-  <CalculatorSectionCloud id="calculator" />
+  <CalculatorSectionCloud v-if="!isProduction" id="calculator" />
   <AnalysisSection />
   <DecorSection />
-  <PerfomanceSection id="location" />
+  <!-- <PerfomanceSection id="location" /> -->
   <DocumentationSection />
   <SecureSection @openForm="toggleForm" />
   <AppFooter />
@@ -44,11 +44,14 @@ import AppTestCloud from '@/components/AppTestCloud.vue';
 import CalculatorSectionCloud from '@/components/sections/CalculatorSectionCloud.vue';
 import { ref } from 'vue';
 
+const isProduction = ref(import.meta.env.PROD)
 const isOpenModal = ref(false);
 
 const toggleForm = () => {
   isOpenModal.value = !isOpenModal.value
 }
+
+console.log(import.meta.env.PROD)
 </script>
 
 <style scoped lang="scss"></style>

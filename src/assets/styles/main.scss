@@ -8,6 +8,71 @@ img {
   max-width: 100%;
 }
 
+.tabs-select {
+  --el-fill-color-blank: transparent;
+  --el-border-color: transparent;
+  --el-select-input-color: #{$yellow};
+  --el-select-input-focus-border-color: transparent;
+
+  border-bottom: vw(1) solid $yellow;
+
+  @include mobile {
+    border-bottom: vmin(0.65) solid $yellow;
+  }
+
+  :deep(.el-select__wrapper) {
+    padding: vw(4) vw(6) vw(12) 0;
+
+    @include mobile {
+      padding: vmin(4) vmin(6) vmin(12) 0;
+    }
+  }
+
+  :deep(.el-select__wrapper.is-focused) {
+    box-shadow: none;
+  }
+
+  :deep(.el-select__wrapper.is-hovering:not(.is-focused)) {
+    box-shadow: none;
+  }
+
+  :deep(.el-select__placeholder) {
+    font-family: 'Plus Jakarta Sans';
+    font-weight: 400;
+    font-size: vw(14);
+    line-height: vw(15);
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: $yellow;
+
+    @include mobile {
+      font-size: vmin(9);
+      line-height: vmin(9);
+    }
+  }
+
+  :deep(.el-select__caret) {
+    width: vw(14);
+    height: vw(8);
+
+    @include mobile {
+      width: vmin(12);
+      height: vmin(12);
+    }
+  }
+
+  :deep(.el-icon svg) {
+    color: $yellow;
+    width: vw(14);
+    height: vw(8);
+
+    @include mobile {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
 .el-select__popper {
   &.el-popper {
     border: vw(1) solid rgb($yellow, 0.26) !important;
@@ -46,7 +111,7 @@ img {
     @include mobile {
       padding: 0 vmin(15);
       font-size: vmin(9);
-      line-height: 130%;
+      line-height: 1.2;
       margin-bottom: vmin(5);
     }
   }
@@ -105,7 +170,7 @@ img {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .fade-enter-from,

@@ -61,6 +61,9 @@ const isOpenMenu = ref(false)
 
 const toggleMenu = () => {
   isOpenMenu.value = !isOpenMenu.value
+  if (document.body && document.body.style) {
+    document.body.style.overflow = isOpenMenu.value ? 'hidden' : ''
+  }
 }
 </script>
 
@@ -111,6 +114,17 @@ const toggleMenu = () => {
     @include mobile {
       // padding-bottom: 90svh;
       padding-bottom: calc(100svh - 64%);
+    }
+
+    &:before {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgb(#000, 0.6);
     }
   }
 }
@@ -198,7 +212,7 @@ const toggleMenu = () => {
   font-family: "Plus Jakarta Sans";
   font-weight: 400;
   font-size: vw(20);
-  line-height: 130%;
+  line-height: 1.2;
   letter-spacing: 0px;
 
   @include mobile {
@@ -343,8 +357,9 @@ const toggleMenu = () => {
     max-width: vw(370);
     font-family: 'Plus Jakarta Sans';
     font-size: vw(16);
-    line-height: 130%;
+    line-height: 1.2;
     letter-spacing: 0px;
+    font-weight: 300;
     color: $white;
 
     @include mobile {

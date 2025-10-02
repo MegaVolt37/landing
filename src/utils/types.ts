@@ -1,7 +1,14 @@
 export interface IFilterMap {
-  label: string,
-  value: string,
+  label?: string,
+  type?: string,
+  title?: string,
+  description?: string,
+  position?: { lat: number, lng: number },
+  icon?: any,
+  default?: boolean,
+  value?: string,
   id: string,
+  travelTime?: string
 }
 
 export interface Unit {

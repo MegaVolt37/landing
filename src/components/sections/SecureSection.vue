@@ -83,25 +83,6 @@ import { register } from 'swiper/element/bundle';
 import { onMounted, ref } from "vue"
 
 register();
-
-// onMounted(() => {
-
-//   const initSwiper = () => {
-//     console.log(window.innerWidth, swiperInstance.value)
-//     if (window.innerWidth < 640 && !swiperInstance.value) {
-//       swiperInstance.value = new Swiper('.secure__list', {
-//         slidesPerView: 1.2,
-//         spaceBetween: 16,
-//       });
-//     } else if (window.innerWidth >= 640 && swiperInstance.value) {
-//       swiperInstance.value.destroy(true, true);
-//       swiperInstance.value = null;
-//     }
-//   };
-
-//   // initSwiper();
-//   // window.addEventListener('resize', initSwiper);
-// });
 </script>
 
 <style scoped lang="scss">
@@ -188,7 +169,7 @@ register();
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
     font-size: vw(16);
-    line-height: 130%;
+    line-height: 1.2;
     letter-spacing: 0px;
     color: $white;
 
@@ -201,7 +182,7 @@ register();
   &__button {
     padding-top: vw(15);
     padding-bottom: vw(15);
-    margin-top: vw(45);
+    margin-top: vw(25);
     font-family: 'Wix Madefor Display';
     font-weight: 400;
     font-size: vw(14);
@@ -236,12 +217,16 @@ register();
   }
 
   .slider {
+    max-width: 95%;
     overflow: hidden;
     position: relative;
     padding: vw(20);
     margin: vw(-20);
+    margin-left: auto;
+    margin-right: auto;
 
     @include mobile {
+      max-width: 100%;
       padding: vmin(10);
       padding-top: vmin(30);
       margin: vmin(-10);
@@ -261,6 +246,10 @@ register();
       padding: vmin(10);
       margin: vmin(-10);
     }
+  }
+
+  :deep(swiper-slide) {
+    height: fit-content !important;
   }
 
   &__item {
@@ -287,7 +276,7 @@ register();
   &__item-content {
     width: 100%;
     aspect-ratio: 1;
-    padding: vw(67) vw(50) vw(65) vw(67);
+    padding: vw(85) vw(50) vw(50) vw(60);
     display: flex;
     flex-direction: column;
 
@@ -308,8 +297,12 @@ register();
     color: $yellow-light;
     margin-bottom: vw(20);
     display: inline-block;
+    min-height: vw(55);
+    display: grid;
+    align-items: flex-end;
 
     @include mobile {
+      min-height: vmin(55);
       font-size: vmin(17);
       line-height: vmin(18);
       margin-bottom: vmin(6);
@@ -320,7 +313,7 @@ register();
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
     font-size: vw(15);
-    line-height: 130%;
+    line-height: 1.2;
     letter-spacing: 0px;
     color: $white;
 

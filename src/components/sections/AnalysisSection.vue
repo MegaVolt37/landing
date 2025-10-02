@@ -14,41 +14,21 @@
 
     <div class="analysis__content">
       <div class="analysis__tile">
-        <div class="analysis__tile-item" v-for="item in places" :key="item.id">
-          <span class="analysis__time">{{ readTime(item) }}</span>
+        <div class="analysis__tile-item" v-for="item in placesMock" :key="item.id">
+          <span class="analysis__time">{{ readTime(item as IMarker) }}</span>
           <p class="analysis__place" v-dompurify-html="item.title" />
           <p class="analysis__benefit">{{ item.description }}</p>
         </div>
-        <!-- <div class="analysis__tile-item">
-          <span class="analysis__time">7 min</span>
-          <p class="analysis__place">International Hospital</p>
-          <p class="analysis__benefit">Attraction point for medical tourism.</p>
-        </div>
-        <div class="analysis__tile-item">
-          <span class="analysis__time">10 min</span>
-          <p class="analysis__place">ICON<br />BALI Mall</p>
-          <p class="analysis__benefit">Upscale retail adds lifestyle value and convenience.</p>
-        </div>
-        <div class="analysis__tile-item">
-          <span class="analysis__time">4 min</span>
-          <p class="analysis__place">Sanur Beach</p>
-          <p class="analysis__benefit">Safe, family-friendly, and always in demand.</p>
-        </div>
-        <div class="analysis__tile-item">
-          <span class="analysis__time">2 min</span>
-          <p class="analysis__place">Local Markets & Dining</p>
-          <p class="analysis__benefit">Authentic Bali vibes that guests love.</p>
-        </div> -->
       </div>
       <div class="analysis__map">
         <div class="analysis__map_stickers">
           <span class="analysis__map_sticker" :class="{ 'analysis__map_sticker--active': activeFilter === filter.id }"
-            v-for="filter in filters" :key="filter.id" @click="changeActiveFilter(filter.id)">{{ filter.label }}</span>
+            v-for="(filter, index) in filters" :key="index" @click="changeActiveFilter(filter.id)">{{ filter.label
+            }}</span>
         </div>
         <div class="analysis__map_map">
-          <AppMap ref="mapElement" :filters="filters" :places="places" :centerMarker="centerMarker"
-            :activeFilter="activeFilter" @changeActiveFilter="changeActiveFilter"
-            :changeActiveFilter="changeActiveFilter" />
+          <AppMap ref="mapElement" :places="filteredPlaces" :centerMarker="centerMarker" :activeFilter="activeFilter"
+            @changeActiveFilter="changeActiveFilter" :changeActiveFilter="changeActiveFilter" />
         </div>
       </div>
     </div>
@@ -57,17 +37,18 @@
 
 <script setup lang="ts">
 
-import { onMounted, ref } from 'vue';
-import logoMap from "@/assets/images/logo-map.svg"
-import iconBeach from "@/assets/images/maps/iconBeach.svg"
-import iconMall from "@/assets/images/maps/iconMall.svg"
-import iconPlus from "@/assets/images/maps/iconPlus.svg"
-import iconSchool from "@/assets/images/maps/iconSchool.svg"
+import logoMap from "@/assets/images/logo-map.svg";
+import iconBeach from "@/assets/images/maps/iconBeach.svg";
+import iconMall from "@/assets/images/maps/iconMall.svg";
+import iconPlus from "@/assets/images/maps/iconPlus.svg";
+import iconSchool from "@/assets/images/maps/iconSchool.svg";
+import { computed, onMounted, ref } from 'vue';
 import AppMap from '../AppMap.vue';
-import type { IFilterMap } from '@/utils/types';
 
 interface IMarker {
   id: string,
+  title?: string,
+  description?: string,
   type: string | any,
   position: { lat: number, lng: number },
   icon: any,
@@ -75,21 +56,79 @@ interface IMarker {
   default?: boolean
 }
 
-const activeFilter = ref<string | null>("BY CAR")
+const activeFilter = ref<string | null>(null)
 
 const filters = [
-  { label: "WALKABLE", value: "walk", id: 'walk' },
-  { label: "FREE SHUTTLE", value: "shuttle", id: 'shuttle' },
-  { label: "BY CAR", value: "car", id: 'car' }
+  { label: "WALKABLE", value: "walk", id: 'WALKABLE' },
+  { label: "FREE SHUTTLE", value: "shuttle", id: 'FREE SHUTTLE' },
+  { label: "BY CAR", value: "car", id: 'BY CAR' },
+  { label: "ALL", value: null, id: null },
 ]
 
 const centerMarker: IMarker = {
   id: "",
+  title: "Verdana Sanur residences",
+  description: "",
   type: "walk",
   position: { lat: -8.701024719020094, lng: 115.25534786657671 },
   icon: logoMap,
   default: true
 }
+
+const placesMock = [
+  {
+    id: "International Hospital",
+    title: "International Hospital",
+    description: "World-class care with English-speaking doctors and 24/7 emergency support.",
+    position: { lat: -8.679353197943632, lng: 115.25703407690618 },
+    type: [
+      { key: "BY CAR", time: '6 min' },
+    ],
+    icon: iconSchool,
+  },
+  {
+    id: "24/7 Pharmacy",
+    title: "24/7 Pharmacy",
+    description: "Always-open access to medicines and essentials.",
+    position: { lat: -8.679130228085594, lng: 115.25919376552032 },
+    type: [
+      { key: "BY CAR", time: '4 min' },
+    ],
+    icon: iconPlus,
+  },
+  {
+    id: "Sanur Beach",
+    title: "Sanur Beach",
+    description: "Peaceful shoreline for morning walks and gentle exercise.",
+    position: { lat: -8.706742303445766, lng: 115.2635888695486 },
+    type: [
+      { key: "BY CAR", time: '4 min' },
+      { key: "FREE SHUTTLE", time: '7 min' },
+    ],
+    icon: iconBeach,
+  },
+  {
+    id: "Essential Services",
+    title: "Essential Services",
+    description: "Banks, groceries, and daily needs are within walking distance.",
+    type: [
+      { key: "BY CAR", time: '3 min' },
+    ],
+  },
+  {
+    id: "Medical & Wellness Map",
+    title: "Medical & Wellness Map",
+    description: "Interactive guide to nearby hospitals, clinics, quiet zones, and wellness facilities.",
+    type: [
+      { key: "BY CAR", time: '5 min' },
+    ],
+  }
+  // {
+  //   id: "Local Markets",
+  //   title: "Local Markets & Dining",
+  //   description: "Authentic Bali vibes that guests love.",
+  // }
+]
 
 const places = [
   {
@@ -125,7 +164,7 @@ const places = [
   },
   {
     id: "Icon Bali mall",
-    title: "ICON<br />BALI Mall",
+    title: "Icon<br />Bali mall",
     description: "Upscale retail adds lifestyle value and convenience.",
     position: { lat: -8.68720826827467, lng: 115.26298358286074 },
     type: [
@@ -176,7 +215,7 @@ const places = [
     icon: iconSchool,
   },
   {
-    id: "LITTLE STARS KINDERGARDEN",
+    id: "Little Stars Kindergarden",
     title: "Little Stars Kindergarden",
     description: "",
     position: { lat: -8.7005392254747, lng: 115.25533214683286 },
@@ -186,7 +225,7 @@ const places = [
     icon: iconSchool,
   },
   {
-    id: "RUMAH KECIL KIDS CENTER",
+    id: "Rumah Kecil Kids Center",
     title: "Rumah Kecil Kids Center",
     description: "",
     position: { lat: -8.700488956945652, lng: 115.25570133851144 },
@@ -203,6 +242,16 @@ const places = [
 ]
 
 const mapElement = ref()
+
+const filteredPlaces = computed((): IMarker[] => {
+  if (activeFilter.value === null) return places
+  return places.filter((place: IMarker) => {
+    const res = place.type.find((m: any) => m.key === activeFilter.value)
+    if (res) {
+      return place
+    }
+  })
+})
 
 // const readTime = (item: IMarker) => {
 //   // console.log(item.type, activeFilter.value)
@@ -228,23 +277,25 @@ const readTime = (item: IMarker) => {
       console.log(item.type, activeFilter.value, res)
       return res.time
     }
-    return 'dwad' // или дефолтное значение
+
+    return item.type[0].time // или дефолтное значение
   }
   return ''
 }
 
-const changeActiveFilter = (id: string) => {
+const changeActiveFilter = (id: string | null) => {
   activeFilter.value = id
 }
 
 onMounted(() => {
-  changeActiveFilter('walk')
+  changeActiveFilter(null)
 })
 </script>
 
 <style scoped lang="scss">
 .analysis {
   padding: vw(45) vw(43) vw(40) vw(43);
+  padding: vw(90) vw(43) vw(40) vw(43);
   background-color: $gray-light;
 
   @include mobile {
@@ -255,7 +306,7 @@ onMounted(() => {
     display: grid;
     grid-template-columns: 1fr 30%;
     justify-content: space-between;
-    margin-bottom: vw(60);
+    margin-bottom: vw(23);
 
     @include mobile {
       grid-template-columns: 1fr;
@@ -312,7 +363,7 @@ onMounted(() => {
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
     font-size: vw(16);
-    line-height: 130%;
+    line-height: 1.2;
     letter-spacing: 0px;
     color: $black-light;
 
@@ -327,7 +378,7 @@ onMounted(() => {
   &__tile {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
 
     @include mobile {
       grid-template-columns: repeat(2, 1fr);
@@ -359,37 +410,25 @@ onMounted(() => {
         border-top: vmin(1) solid $yellow-middle;
       }
     }
-
-    // &:not(.analysis__tile-item:nth-child(1)) {
-    //   @include mobile {
-    //     border-top: none;
-    //   }
-    // }
-
-    // &:not(.analysis__tile-item:nth-child(2)) {
-    //   @include mobile {
-    //     border-top: none;
-    //   }
-    // }
   }
 
-  &__tile-item:nth-child(1) {
+  &__tile-item:nth-child(5n + 1) {
     z-index: 5;
   }
 
-  &__tile-item:nth-child(2) {
+  &__tile-item:nth-child(5n + 2) {
     z-index: 4;
   }
 
-  &__tile-item:nth-child(3) {
+  &__tile-item:nth-child(5n + 3) {
     z-index: 3;
   }
 
-  &__tile-item:nth-child(4) {
+  &__tile-item:nth-child(5n + 4) {
     z-index: 2;
   }
 
-  &__tile-item:nth-child(5) {
+  &__tile-item:nth-child(5n + 5) {
     z-index: 1;
   }
 
@@ -428,6 +467,19 @@ onMounted(() => {
     @include mobile {
       margin-left: vmin(-10);
       padding-left: vmin(28);
+    }
+  }
+
+  &__tile-item:nth-child(5n + 1) {
+    @include desktop {
+      padding: vw(25);
+      margin-left: 0;
+    }
+  }
+
+  &__tile-item:nth-child(n+6) {
+    @include desktop {
+      border-top: none;
     }
   }
 
@@ -487,7 +539,7 @@ onMounted(() => {
     font-weight: 400;
     font-style: Regular;
     font-size: vw(14);
-    line-height: 130%;
+    line-height: 1.2;
     letter-spacing: 0px;
     color: $black-light;
 

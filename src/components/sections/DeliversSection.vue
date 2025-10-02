@@ -199,7 +199,7 @@ register();
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
     font-size: vw(16);
-    line-height: 130%;
+    line-height: 1.2;
     letter-spacing: 0px;
     color: $black-light;
 
@@ -243,6 +243,10 @@ register();
     }
   }
 
+  :deep(swiper-slide) {
+    height: fit-content !important;
+  }
+
   &__tile {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -274,11 +278,12 @@ register();
   &__item-content {
     display: flex;
     flex-direction: column;
-    padding: vw(60) vw(30) vw(60) vw(50);
+    padding: vw(80) vw(30) vw(60) vw(56);
     width: 100%;
     height: 100%;
 
     @include mobile {
+      justify-content: center;
       padding: vmin(45) vmin(30) vmin(45) vmin(45);
     }
   }
@@ -294,8 +299,13 @@ register();
     color: $yellow-dark;
     display: block;
     margin-bottom: vw(20);
+    display: inline-block;
+    min-height: vw(55);
+    display: grid;
+    align-items: flex-end;
 
     @include mobile {
+      min-height: vmin(55);
       font-size: vmin(17);
       line-height: vmin(18);
       margin-bottom: vmin(20);
@@ -306,7 +316,7 @@ register();
     font-family: 'Plus Jakarta Sans';
     font-weight: 300;
     font-size: vw(14);
-    line-height: 130%;
+    line-height: 1.2;
     letter-spacing: 0px;
     color: $black-light;
 

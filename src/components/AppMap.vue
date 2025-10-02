@@ -1,20 +1,11 @@
 <template>
   <div class="map-wrapper">
     <!-- Карта -->
-    <GMapMap ref="mapRef" :center="center" :zoom="16" map-type-id="terrain" style="width: 100%; height: 100%"
+    <GMapMap ref="mapRef" :center="center" :zoom="14" map-type-id="terrain" style="width: 100%; height: 100%"
       :options="mapOptions" @tilesloaded="onMapReady">
       <GMapMarker ref="markerMap" class="marker" v-for="marker in [...places, centerMarker]" :key="marker.id"
-        :position="marker.position" :icon="getIcon(marker)" @click="clickMarker()"
+        :position="marker.position" :icon="getIcon(marker as IMarker)" @click="clickMarker()"
         :label="marker.id === activeMarkerId ? marker.travelTime : ''">
-        <!-- тултип через OverlayView -->
-        <!-- <div ref="tooltipEl" class="custom-tooltip">
-          <div class="tooltip-content">
-            <p class="title">{{ marker.id }}</p>
-            <p class="distance">{{ marker.distance }}</p>
-            <p class="time">{{ marker.travelTime }}</p>
-          </div>
-        </div> -->
-        <!-- <AppMapTooltip /> -->
       </GMapMarker>
     </GMapMap>
   </div>
@@ -34,9 +25,9 @@ import iconSchool from "@/assets/images/maps/iconSchool.svg"
 import logoMapComponent from "@/components/icons/IconLogoMap.vue"
 import type { IFilterMap } from "@/utils/types"
 import AppMapTooltip from './AppMapTooltip.vue'
+import AppMapTooltipCenter from './AppMapTooltipCenter.vue'
 
 interface IProps {
-  filters: IFilterMap[],
   places: IMarker[],
   activeFilter: string | null,
   centerMarker?: IMarker,
@@ -55,7 +46,7 @@ interface IMarker {
 
 const props = defineProps<IProps>()
 
-const center = { lat: -8.701024719020094, lng: 115.25534786657671 } // Bali центр
+const center = { lat: -8.690924719020094, lng: 115.25534786657671 } // Bali центр
 
 const sandMapStyle = [
   {
@@ -296,9 +287,11 @@ const overlay = ref<google.maps.OverlayView | null>(null)
 const overlays = reactive<Record<string, google.maps.OverlayView>>({})
 // Маркеры
 
-const centerMarker: IMarker = {
+const centerMarker: IFilterMap = {
   id: "",
   type: "walk",
+  title: "Sanur Beach",
+  description: "",
   position: { lat: -8.701024719020094, lng: 115.25534786657671 },
   icon: logoMap,
   default: true
@@ -372,11 +365,23 @@ function getIcon(marker: IMarker) {
     scaledSize: { width: size, height: size },
     anchor: { x: anchor, y: size }
   }
-
-
 }
 
-function createOverlay(marker: IMarker) {
+function clearOverlays() {
+  Object.values(overlays).forEach(overlay => overlay.setMap(null))
+  Object.keys(overlays).forEach(key => delete overlays[key])
+}
+
+function renderOverlays() {
+  clearOverlays()
+  props.places.forEach(marker => createOverlay(marker, AppMapTooltip))
+
+  if (props.centerMarker) {
+    createOverlay(props.centerMarker, AppMapTooltipCenter)
+  }
+}
+
+function createOverlay(marker: IMarker, component: any) {
   if (!window.google || !window.google.maps) return
   const overlay = new window.google.maps.OverlayView()
 
@@ -398,8 +403,10 @@ function createOverlay(marker: IMarker) {
     (this as any).div = div;
 
     // Монтируем Vue-компонент в div
-    const app = createApp(AppMapTooltip, { marker });
+    const app = createApp(component, { marker, activeFilter: props.activeFilter });
     app.mount(div);
+
+    (this as any).app = app
 
     const panes = this.getPanes();
     if (panes && panes.overlayLayer) {
@@ -414,16 +421,30 @@ function createOverlay(marker: IMarker) {
     )
     const div = (this as any).div
     if (div) {
-      div.style.left = pos ? pos.x + "px" : null
-      div.style.top = pos ? pos.y + "px" : null
-      div.style.position = "absolute"
-      div.style.transform = "translate(14px, -100%)"
+      if (marker.default) {
+        div.style.left = pos ? pos.x + "px" : null
+        div.style.top = pos ? pos.y + "px" : null
+        div.style.position = "absolute"
+        div.style.transform = "translate(24px, -125%)"
+      } else {
+        div.style.left = pos ? pos.x + "px" : null
+        div.style.top = pos ? pos.y + "px" : null
+        div.style.position = "absolute"
+        div.style.transform = "translate(14px, -100%)"
+      }
     }
   }
 
   overlay.onRemove = function () {
     const div = (this as any).div
-    if (div) div.remove()
+    const app = (this as any).app
+
+    if (app) {
+      app.unmount()
+    }
+    if (div) {
+      div.remove()
+    }
   }
 
   overlay.setMap(mapRef.value.$mapObject)
@@ -431,6 +452,7 @@ function createOverlay(marker: IMarker) {
 }
 
 watch(() => props.activeFilter, async () => {
+  renderOverlays()
   // await calculateDistances()
 })
 
@@ -470,7 +492,8 @@ const onMapReady = () => {
 
   if (!isMapLoaded.value) {
     // calculateDistances()
-    props.places.forEach(marker => createOverlay(marker))
+    // props.places.forEach(marker => createOverlay(marker))
+    renderOverlays()
     isMapLoaded.value = true
   }
 }

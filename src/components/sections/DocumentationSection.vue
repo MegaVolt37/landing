@@ -10,24 +10,6 @@
         institutional-grade transparency.
       </p>
     </div>
-    <!-- <swiper :modules="[Navigation, Autoplay]" :slides-per-view="3" :space-between="50" virtual>
-      <swiper-slide v-for="(slideContent, index) in 3" :key="index" :virtualIndex="index">
-        {{ slideContent }}
-      </swiper-slide>
-    </swiper> -->
-    <!-- <UiSlider>
-      <div class="documentation__item">
-        <IconFolder class="documentation__item-icon" />
-        <span class="documentation__item-title">Ownership Structure</span>
-        <ul class="documentation__item-list">
-          <li class="documentation__item-list_item">Indonesian company formation (PT PMA)</li>
-          <li class="documentation__item-list_item">Hak Pakai land rights (25+25 years)</li>
-          <li class="documentation__item-list_item">Nominee director arrangements</li>
-          <li class="documentation__item-list_item">Shareholder agreements</li>
-          <li class="documentation__item-list_item">Exit strategy protocols</li>
-        </ul>
-      </div>
-    </UiSlider> -->
     <swiper-container class="my-swiper" :slides-per-view="3" :autoHeight="false" :space-between="spaceBetween"
       :breakpoints="{
         768: {
@@ -198,7 +180,7 @@ onMounted(() => {
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
     font-size: vw(16);
-    line-height: 130%;
+    line-height: 1.2;
     letter-spacing: 0px;
     color: $black-light;
 
@@ -225,11 +207,10 @@ onMounted(() => {
     border-radius: vw(15);
     border: vw(1) solid rgb($yellow, 0.6);
     // aspect-ratio: 7 / 6;
-    grid-template-rows: 33% 0.3fr 0fr;
+    grid-template-rows: 38% 0.3fr 1.2fr;
 
     @include mobile {
-      display: flex;
-      flex-direction: column;
+      grid-template-rows: 38% 2fr 1.2fr;
       padding: vmin(28) vmin(22);
       border-radius: vmin(10);
       border: vmin(1) solid rgb($yellow, 0.6);

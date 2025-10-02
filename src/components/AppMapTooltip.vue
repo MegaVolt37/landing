@@ -1,7 +1,7 @@
 <template>
   <div class="custom-tooltip">
     <div class="tooltip-content">
-      <span class="time">{{ marker.travelTime }}</span>
+      <span class="time">{{ activeTime }}</span>
       <p class="title">{{ marker.id }}</p>
       <!-- <p class="distance">{{ marker.distance }}</p> -->
     </div>
@@ -9,16 +9,28 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+
 interface IMarker {
   id: string,
-  type: string,
+  type: any,
   position: { lat: number, lng: number },
   icon: any,
   travelTime?: string | null,
   distance?: string | null,
   default?: boolean
 }
-defineProps<{ marker: IMarker }>()
+const props = defineProps<{ marker: IMarker, activeFilter: string | null }>()
+
+const activeTime = computed(() => {
+  if (Array.isArray(props.marker.type)) {
+    if (props.activeFilter) {
+      return props.marker.type.find((m: any) => m.key === props.activeFilter)?.time
+    }
+    return props.marker.type.find((m: any) => m.key === 'BY CAR')?.time || props.marker.type[0]?.time
+  }
+  return props.marker.type
+})
 </script>
 
 <style scoped lang="scss">

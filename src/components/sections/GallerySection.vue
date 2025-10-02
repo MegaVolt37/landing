@@ -35,38 +35,15 @@ import UiButton from '../ui/uiButton.vue';
 <style scoped lang="scss">
 .gallery {
   padding-top: vw(60);
-  // padding-bottom: vw(110);
-  // overflow: hidden;
 
   @include mobile {
     padding-top: vmin(30);
-    // padding-bottom: vmin(70);
   }
 
   &__container {
     position: relative;
     z-index: 1;
   }
-
-  // &__background {
-  //   position: absolute;
-  //   bottom: -107.5%;
-  //   top: auto;
-  //   left: 0;
-  //   width: 100%;
-
-  //   @include mobile {
-  //     bottom: -73%;
-  //     left: -15%;
-  //     right: -15%;
-  //     width: auto;
-  //   }
-
-  //   img {
-  //     width: 100%;
-  //     object-fit: cover;
-  //   }
-  // }
 
   &__title {
     position: absolute;
@@ -110,12 +87,6 @@ import UiButton from '../ui/uiButton.vue';
     position: relative;
   }
 
-  &__item {
-    // position: absolute;
-    // flex: 0 0 auto;
-    // flex: 1;
-  }
-
   &__img {
     width: vw(619);
     height: initial;
@@ -138,8 +109,6 @@ import UiButton from '../ui/uiButton.vue';
     aspect-ratio: 1;
     height: vw(160);
     border: vw(2) solid $yellow-light;
-    // position: absolute;
-    // left: 50%;
 
     @include mobile {
       aspect-ratio: auto;

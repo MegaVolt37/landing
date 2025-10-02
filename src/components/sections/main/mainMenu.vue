@@ -25,7 +25,7 @@
             </li> -->
           </ul>
           <div class="menu__contacts">
-            <a href="tel:+6281245555555" class="menu__phone">+62 81 245 555 555</a>
+            <a href="tel:+6281139408858" class="menu__phone">+62 811 3940 8858</a>
             <UiButton class="menu__contact" variant="solid-yellow" shape="rounded" size="lg">Contact us</UiButton>
           </div>
         </nav>
@@ -54,8 +54,8 @@ const props = defineProps<IProps>()
 const menu = [
   { id: "about", label: "about us" },
   { id: "residents", label: "select residents" },
-  { id: "calculator", label: "Investment calculator" },
-  { id: "location", label: "location" },
+  { id: "ExploreSection", label: "Explore VERDANA virtually" },
+  { id: "mapSection", label: "location" },
 ];
 
 const menuElement = ref<HTMLElement>()
@@ -119,9 +119,11 @@ defineExpose({ menuElement })
   left: 0;
   position: absolute;
   background-color: $green;
+  display: grid;
   // padding: vw(30) vw(55) vw(50) vw(50);
   // padding-top: 0;
-  padding-bottom: calc(100svh - 12%);
+  // padding-bottom: calc(100svh - 12%);
+  min-height: 100svh;
   max-width: vw(450);
   width: 100%;
   // height: 100%;
@@ -134,15 +136,15 @@ defineExpose({ menuElement })
 
   @include mobile {
     position: fixed;
-    padding-bottom: 100svh;
+    // padding-bottom: 100svh;
     max-width: 100%;
   }
 
   &__wrapper {
-    left: 0;
-    right: 0;
-    position: absolute;
-    height: 100%;
+    // left: 0;
+    // right: 0;
+    // position: absolute;
+    // height: 100%;
     // left: vw(-50);
     // right: vw(-55);
     // padding-bottom: calc(100svh - 12%);
@@ -152,12 +154,14 @@ defineExpose({ menuElement })
     position: relative;
     padding: vw(30) vw(55) vw(50) vw(50);
     height: 100%;
+    max-height: 100svh;
     overflow-y: auto;
     // left: vw(50);
     // right: vw(55);
     // padding-bottom: calc(100svh - 12%);
 
     @include mobile {
+      max-height: 100svh;
       padding: vw(30) vw(30);
     }
   }
@@ -175,7 +179,9 @@ defineExpose({ menuElement })
     width: 100%;
 
     @include mobile {
-      bottom: -16%;
+      bottom: auto;
+      top: 100%;
+      transform: translateY(vmin(-40));
     }
   }
 
@@ -226,6 +232,10 @@ defineExpose({ menuElement })
     justify-content: space-between;
     position: relative;
     z-index: 1;
+
+    @include mobile {
+      padding-bottom: vmin(60);
+    }
   }
 
   &__logo {
