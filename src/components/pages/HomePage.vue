@@ -8,7 +8,8 @@
   <GallerySection />
   <InvestmentSection v-if="!isProduction" />
   <!-- <CalculatorSection id="calculator" /> -->
-  <CalculatorSectionCloud v-if="!isProduction" id="calculator" />
+  <!-- <CalculatorSectionCloud v-if="!isProduction" id="calculator" /> -->
+  <CalculatorSection v-if="!isProduction" id="calculator" />
   <AnalysisSection />
   <DecorSection />
   <!-- <PerfomanceSection id="location" /> -->
@@ -39,9 +40,6 @@ import DocumentationSection from '@/components/sections/DocumentationSection.vue
 import SecureSection from '@/components/sections/SecureSection.vue';
 import AppFooter from '@/components/AppFooter.vue';
 import AppForm from '@/components/AppForm.vue';
-import AppTest from '@/components/AppTest.vue';
-import AppTestCloud from '@/components/AppTestCloud.vue';
-import CalculatorSectionCloud from '@/components/sections/CalculatorSectionCloud.vue';
 import { ref } from 'vue';
 
 const isProduction = ref(import.meta.env.PROD)

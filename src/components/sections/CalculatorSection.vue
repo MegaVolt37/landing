@@ -13,96 +13,126 @@
         </p>
         <div class="calculator__filter">
           <UiButton class="calculator__button-flt" variant="outline-yellow" shape="rounded" size="md"
-            @click="toggleFilters">filter Analysis
-            Results
+            @click="toggleFilters">
+            filter Analysis Results
           </UiButton>
         </div>
         <Transition name="slide-left">
-          <div class="calculator__fields" v-if="isHiddenFilters">
+          <div class="calculator__fields" v-if="!isHiddenFilters">
             <span class="calculator__fields-title">filter</span>
-            <span class="calculator__fields-close" @click="toggleFilters"><img src="@/assets/images/close.svg"
-                alt="close"></span>
+            <span class="calculator__fields-close" @click="toggleFilters">
+              <img src="@/assets/images/close.svg" alt="close">
+            </span>
+
+            <!-- Construction Phase -->
             <div class="calculator__field">
               <span class="calculator__label">Construction Phase</span>
-              <el-select v-model="val" placeholder="Select" class="calculator__select" :suffix-icon="IconPlus">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
+              <ElSelect v-model="selectedPhase" placeholder="Select" class="calculator__select">
+                <ElOption v-for="phase in phaseOptions" :key="phase.value" :label="phase.label" :value="phase.value" />
+              </ElSelect>
             </div>
+
+            <!-- Villa Unit Selection -->
             <div class="calculator__field">
               <span class="calculator__label">Villa Unit Selection</span>
-              <el-select v-model="val" placeholder="Select" class="calculator__select" :suffix-icon="IconPlus">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
+              <ElSelect v-model="selectedUnit" placeholder="Select" class="calculator__select">
+                <ElOption v-for="unit in units" :key="unit.id" :label="unit.id" :value="unit.id" />
+              </ElSelect>
             </div>
+
+            <!-- Choose Type of Finish -->
             <div class="calculator__field">
-              <span class="calculator__label">Choose Type of Finish</span>
+              <span class="calculator__label">Type of Finish</span>
               <div class="calculator__field__buttons">
-                <UiButton class="calculator__field__button" variant="outline-yellow" shape="rounded" size="lg">premium
+                <UiButton class="calculator__field__button"
+                  :variant="selectedFinish === 'premium' ? 'solid-yellow' : 'outline-yellow'" shape="rounded" size="lg"
+                  @click="selectedFinish = 'premium'">
+                  premium
                 </UiButton>
-                <UiButton class="calculator__field__button" variant="outline-yellow" shape="rounded" size="lg">balanced
+                <UiButton class="calculator__field__button"
+                  :variant="selectedFinish === 'balanced' ? 'solid-yellow' : 'outline-yellow'" shape="rounded" size="lg"
+                  @click="selectedFinish = 'balanced'">
+                  balanced
                 </UiButton>
               </div>
-
             </div>
+
+            <!-- Rental Strategy -->
             <div class="calculator__field">
               <span class="calculator__label">Rental Strategy</span>
-              <el-select v-model="val" placeholder="Select" class="calculator__select" :suffix-icon="IconPlus">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
+              <ElSelect v-model="selectedStrategy" placeholder="Select" class="calculator__select">
+                <ElOption v-for="strategy in strategyOptions" :key="strategy.value" :label="strategy.label"
+                  :value="strategy.value" />
+              </ElSelect>
             </div>
-            <div class="calculator__field">
+
+            <!-- ADR Scenario -->
+            <!-- <div class="calculator__field">
               <span class="calculator__label">ADR Scenario</span>
               <div class="calculator__field__buttons">
-                <UiButton class="calculator__field__button" variant="outline-yellow" shape="rounded" size="lg">
+                <UiButton class="calculator__field__button"
+                  :variant="selectedScenario === 'optimistic' ? 'solid-yellow' : 'outline-yellow'" shape="rounded"
+                  size="lg" @click="selectedScenario = 'optimistic'; updateCalculations()">
                   Optimistic
                 </UiButton>
-                <UiButton class="calculator__field__button" variant="outline-yellow" shape="rounded" size="lg">Base
+                <UiButton class="calculator__field__button"
+                  :variant="selectedScenario === 'base' ? 'solid-yellow' : 'outline-yellow'" shape="rounded" size="lg"
+                  @click="selectedScenario = 'base'; updateCalculations()">
+                  Base
                 </UiButton>
               </div>
-            </div>
+            </div> -->
+
+            <!-- Display Currency -->
             <div class="calculator__field">
               <span class="calculator__label">Display Currency</span>
-              <el-radio-group class="calculator__radio" v-model="val">
-                <!-- works when >=2.6.0, recommended ✔️ not work when <2.6.0 ❌ -->
-                <el-radio value="Value 1">Indonesian Rupiah (IDR)</el-radio>
-                <!-- works when <2.6.0, deprecated act as value when >=3.0.0 -->
-                <el-radio label="Label 2 & Value 2">US Dollar (USD)</el-radio>
+              <el-radio-group class="calculator__radio" v-model="selectedCurrency" @change="updateDisplay">
+                <el-radio value="idr">Indonesian Rupiah (IDR)</el-radio>
+                <el-radio value="usd">US Dollar (USD)</el-radio>
               </el-radio-group>
             </div>
           </div>
         </Transition>
-
       </div>
 
       <div class="calculator__results">
+        <!-- Investment Analysis Results -->
         <div class="calculator__results-item calculator__chart">
           <span class="calculator__chart-label">Investment Analysis Results</span>
-          <p class="calculator__chart-desc" v-prevent-widow>Investment Parameters: Analysis based on N/A occupancy
-            rate, 0% marketing
-            fee, 30% management fee. Net monthly proceedings: IDR 0. Calculations reflect current market conditions and
-            selected rental strategy.</p>
+          <p class="calculator__chart-desc" v-prevent-widow>
+            Investment Parameters: Analysis based on {{ currentDataUnit?.occupancy }} % occupancy
+            rate, {{ currentDataUnit?.marketing_fee_perc }}% marketing fee, {{
+              currentDataUnit?.management_company_charge_perc }}% management fee.
+            Net monthly proceedings: IDR {{ formatIdr(currentDataUnit?.net_revenue_idr) }}.
+            Calculations reflect current market conditions and selected rental strategy.
+          </p>
         </div>
 
+        <!-- Purchase Price -->
         <div class="calculator__results-item calculator__result">
           <span class="calculator__result-label">Purchase Price</span>
-          <span class="calculator__result-value">$287 149,39</span>
+          <span class="calculator__result-value">{{ purchasePrice }}</span>
         </div>
 
+        <!-- Monthly ROI -->
         <div class="calculator__results-item calculator__result">
           <span class="calculator__result-label">Monthly ROI</span>
-          <span class="calculator__result-value">0,82%</span>
+          <span class="calculator__result-value">{{ currentDataUnit?.monthly_roi_perc }}%</span>
         </div>
 
+        <!-- Annualised ROI -->
         <div class="calculator__results-item calculator__result">
           <span class="calculator__result-label">Annualised ROI</span>
-          <span class="calculator__result-value">10,26%</span>
+          <span class="calculator__result-value">{{ currentDataUnit?.annual_roi_perc }}%</span>
         </div>
 
+        <!-- Payback Period -->
         <div class="calculator__results-item calculator__result">
           <span class="calculator__result-label">Payback Period</span>
-          <span class="calculator__result-value">10,19 years</span>
+          <span class="calculator__result-value">{{ currentDataUnit?.payback_period_years }} years</span>
         </div>
 
+        <!-- Note and Button -->
         <div class="calculator__note">
           <p class="calculator__note-text" v-prevent-widow>
             Note: The information provided is theoretical data for which is not responsible.
@@ -115,58 +145,257 @@
         </div>
       </div>
     </div>
+
+    <!-- Loading overlay -->
+    <div v-if="loading" class="calculator__loading">
+      <div class="calculator__spinner"></div>
+      <p>Loading investment data...</p>
+    </div>
+
+    <!-- Error message -->
+    <div v-if="error" class="calculator__error">
+      <p>{{ error }}</p>
+      <UiButton variant="outline-yellow" @click="retryLoad">Retry</UiButton>
+    </div>
   </section>
 </template>
 
-<script setup lang="ts">
+<script setup>
+import { ref, reactive, computed, onMounted, nextTick, onUnmounted } from 'vue'
+import GoogleSheetsService from '@/services/googlesheets.js'
+import { ElSelect, ElOption } from 'element-plus'
 
-import { computed, ref } from 'vue';
-import IconPlus from '../icons/IconPlus.vue';
-import UiButton from '../ui/uiButton.vue';
-import { useBreakpoint } from "@/composables/useBreakpoint"
+const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
+// UI state
+const isHiddenFilters = ref(isMobile)
+const loading = ref(true)
+const error = ref(null)
 
-const { isMobile } = useBreakpoint()
-const val = ref(1)
-const isOpenFilters = ref(false);
+// Form selections
+const selectedPhase = ref('3')
+const selectedUnit = ref('Unit 1')
+const selectedFinish = ref('balanced')
+const selectedStrategy = ref('daily')
+const selectedCurrency = ref('idr')
 
-const isHiddenFilters = computed(() => {
-  if (!isMobile.value) {
-    return true;
-  } else {
-    return isOpenFilters.value
-  }
-})
-const options = [
-  {
-    value: 'Phase 2 (Mid Construction - 5% Discount)',
-    label: 'Phase 2 (Mid Construction - 5% Discount)',
-  },
-  {
-    value: 'Option2',
-    label: 'Option2',
-  },
-  {
-    value: 'Option3',
-    label: 'Option3',
-  },
-  {
-    value: 'Option4',
-    label: 'Option4',
-  },
-  {
-    value: 'Option5',
-    label: 'Option5',
-  },
+const course = GoogleSheetsService.course
+const units = GoogleSheetsService.units
+const dailyStrategy = GoogleSheetsService.dailyStrategy
+const monthlyStrategy = GoogleSheetsService.monthlyStrategy
+const unitPricesData = GoogleSheetsService.unitsPricesData
+const unitData = GoogleSheetsService.unitsData
+
+// Data from Google Sheets
+// const availableUnits = ref([])
+// const roiData = ref(null)
+// const exchangeRates = reactive({ usdIdr: 16400, idrUsd: 1 / 16400 })
+
+// Options for selects
+const phaseOptions = [
+  { value: '1', label: 'PHASE 1 (EARLY BIRD - 9% DISCOUNT)' },
+  { value: '2', label: 'PHASE 2 (DURING CONSTRUCTION - 4% DISCOUNT)' },
+  { value: '3', label: 'PHASE 3 (BASE PRICE)' }
 ]
 
-const toggleFilters = () => {
-  if (isMobile.value) {
-    isOpenFilters.value = !isOpenFilters.value
+const strategyOptions = [
+  { value: 'daily', label: 'DAILY VACATION RENTALS' },
+  { value: 'monthly', label: 'MONTHLY RENTALS' }
+]
+
+// --- COMPUTED ---
+
+const selectedDataMonthlyDaily = computed(() => {
+  return selectedStrategy.value === 'daily' ? dailyStrategy.value : monthlyStrategy.value
+})
+
+const currentDataUnit = computed(() => {
+  return selectedDataMonthlyDaily.value.find((el) => el.id === selectedUnit.value)
+})
+
+const purchasePrice = computed(() => {
+  // if (!roiData.value && !currentUnit.value) return 0
+  if (selectedPhase.value === '1' || selectedPhase.value === '2') {
+    let priceIdr = 0
+    const unit = unitPricesData.value && unitPricesData.value.find(unit => unit.id === selectedUnit.value)
+    if (unit) {
+      if (selectedPhase.value === '1') {
+        priceIdr = unit.price_1_idr
+      } else if (selectedPhase.value === '2') {
+        priceIdr = unit.price_2_idr
+      }
+    }
+    return selectedCurrency.value === 'usd'
+      ? formatToUsd(priceIdr)
+      : formatCurrency(priceIdr)
+  } else {
+    let priceIdr = unitData.value && unitData.value.find(unit => unit.id === selectedUnit.value)?.price_idr
+
+
+    priceIdr = increaseFinishingPrice(priceIdr)
+
+    return selectedCurrency.value === 'usd'
+      ? formatToUsd(priceIdr)
+      : formatCurrency(priceIdr)
+  }
+})
+
+// --- METHODS ---
+function toggleFilters() {
+  isHiddenFilters.value = !isHiddenFilters.value
+}
+
+async function loadInitialData() {
+  try {
+    loading.value = true
+    error.value = null
+    await GoogleSheetsService.getUnits()
+    await GoogleSheetsService.getDataUnits()
+    await GoogleSheetsService.getDataPriceUnits()
+    await GoogleSheetsService.getDataDailyStrategy()
+    await GoogleSheetsService.getDataMonthlyStrategy()
+    await GoogleSheetsService.getDataRentalRate()
+    await GoogleSheetsService.getDataRentalRate()
+    await GoogleSheetsService.getDataCourse()
+    await GoogleSheetsService.getSelectedPrice()
+
+    loading.value = false
+  } catch (err) {
+    error.value = `Failed to load data: ${err.message}`
+    loading.value = false
+    console.error('Error loading initial data:', err)
   }
 }
+
+function updateDisplay() {
+  nextTick()
+}
+
+function formatToUsd(value) {
+  const numericValue = parseFloat(course.value.replace(',', ''));
+  const result = value / numericValue;
+
+  return formatCurrency(result);
+}
+
+function formatCurrency(value) {
+
+  const amount = value == null ? 0 : Number(value)
+  if (Number.isNaN(amount)) return '—'
+
+  if (selectedCurrency.value === 'usd') {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount)
+  } else {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount)
+  }
+}
+
+function formatIdr(value) {
+  const formatter = new Intl.NumberFormat('id-ID', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  });
+
+  return formatter.format(value)
+}
+
+function increaseFinishingPrice(price) {
+  if (selectedFinish.value === 'balanced') {
+    return price;
+  }
+
+  let finishingPrice = price;
+
+  const unitDataTypology = unitData.value.find(unit => unit.id === selectedUnit.value)?.typology;
+
+  let finishingCost = 0;
+
+  if (unitDataTypology.includes('2Br')) {
+    finishingCost = 275000000; // 275 IDR million
+  } else if (unitDataTypology.includes('3Br')) {
+    finishingCost = 450000000; // 450 IDR million
+  } else if (unitDataTypology.includes('4Br')) {
+    finishingCost = 525000000; // 525 IDR million
+  }
+
+  finishingPrice += finishingCost;
+
+  return finishingPrice;
+}
+
+async function retryLoad() {
+  await loadInitialData()
+}
+
+// --- LIFECYCLE ---
+onMounted(async () => {
+  await loadInitialData()
+})
 </script>
 
 <style scoped lang="scss">
+/* Дополнительные стили для loading и error состояний */
+.calculator__loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 1000;
+}
+
+.calculator__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid #d4af37;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.calculator__error {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #dc3545;
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  z-index: 1000;
+}
+
+.calculator__error p {
+  margin-bottom: 15px;
+}
+
 :deep(.el-select__popper.el-popper) {
   border: vw(1) solid rgb($yellow, 0.26);
   background: #012210;
@@ -178,6 +407,7 @@ const toggleFilters = () => {
 }
 
 .calculator {
+  position: relative;
   padding: vw(65) vw(43) vw(90);
 
   @include mobile {
@@ -451,22 +681,22 @@ const toggleFilters = () => {
     }
 
     :deep(.el-select__caret) {
-      width: vw(14);
-      height: vw(8);
+      width: vw(28);
+      height: vw(16);
 
       @include mobile {
-        width: vmin(7);
-        height: vmin(3);
+        width: vmin(14);
+        height: vmin(6);
       }
     }
 
     :deep(.el-icon svg) {
-      width: vw(14);
-      height: vw(8);
+      width: vw(28);
+      height: vw(16);
 
       @include mobile {
-        width: vmin(7);
-        height: vmin(3);
+        width: vmin(14);
+        height: vmin(6);
       }
     }
   }
@@ -597,7 +827,7 @@ const toggleFilters = () => {
     letter-spacing: 0px;
     text-transform: uppercase;
     color: $yellow;
-    flex: 0 1 50%;
+    flex: 0 1 49%;
 
     @include mobile {
       display: inline-block;
@@ -609,14 +839,13 @@ const toggleFilters = () => {
   }
 
   &__chart-desc {
-    text-wrap: balance;
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
     font-size: vw(16);
     line-height: vw(22);
     letter-spacing: 0px;
     color: $white;
-    flex: 0 1 50%;
+    flex: 0 1 51%;
 
     @include mobile {
       font-size: vmin(10);

@@ -1,56 +1,369 @@
-// src/services/sheetsService.js
+// services/googleSheetsService.js
+import { ref, reactive } from 'vue'
+class GoogleSheetsService {
+  staticTable = {
+    units: 'E30:E40',
+    phases: 'E29:F40',
+    dataUnits: 'E29:Q40',
+    pricesData: 'E14:K25',
+    dailyStrategy: 'E53:Z64',
+    monthlyStrategy: 'E68:Z79',
+    rentalRate: 'E43:I47',
+    course: 'E11:G11',
+    selectedPrice: 'G27'
+  }
 
-const SPREADSHEET_ID = '1bN9iBmrNt5LLD_Hud_uIh7XQNgDGYizbNEpetr40L3U'; // Ваш SPREADSHEET_ID
-const API_KEY = 'AIzaSyBcmzO-a7SfgwjWEyqEpB2x03NGD71Yj2A'; // Вставьте сюда ваш API-ключ
-const SHEET_RANGE = 'Investor_ROI!A2:S'; // Диапазон данных, который мы хотим получить
+  units = ref([])
+  phases = ref([])
+  unitsData = ref([])
+  unitsPricesData = ref([])
+  dailyStrategy = ref([])
+  monthlyStrategy = ref([])
+  rentalRate = ref([])
+  course = ref([])
+  selectedPrice = ref([])
 
-export async function fetchCottageData() {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${SHEET_RANGE}?key=${API_KEY}`;
 
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      // Обработка ошибок HTTP (например, 403 Forbidden, 404 Not Found)
-      const errorData = await response.json();
-      throw new Error(`Ошибка HTTP: ${response.status} - ${errorData.error.message}`);
+  constructor() {
+    this.spreadsheetId = '1bN9iBmrNt5LLD_Hud_uIh7XQNgDGYizbNEpetr40L3U';
+    this.apiKey = import.meta.env.VITE_VUE_APP_GOOGLE_SHEETS_API_KEY;
+    this.baseUrl = 'https://sheets.googleapis.com/v4/spreadsheets';
+    this.cache = new Map();
+  }
+
+  createUnitsArray(data) {
+    return data.map((item, index) => ({
+        id: item[0] // или item, если хотите использовать строку "Unit X"
+    }));
+  }
+
+  transformDataNormalized(data) {
+    const headers = data[0];
+    
+    return data.slice(1).map(row => {
+        const obj = {
+            id: row[0] // Unit становится id
+        };
+        
+        headers.forEach((header, index) => {
+            if (header !== "" && index !== 0) {
+                let key = header
+                    .replace(/,/g, '')
+                    .replace(/\s+/g, '_')
+                    .toLowerCase();
+                
+                let value = row[index];
+                
+                // Преобразование типов данных
+                if (typeof value === 'string') {
+                    if (key.includes('price') || key.includes('vat')) {
+                        value = parseInt(value.replace(/,/g, '')) || value;
+                    }
+                    else if (key.includes('m2') || key.includes('size') || key.includes('area')) {
+                        value = parseInt(value) || value;
+                    }
+                    else if (key === 'available') {
+                        value = value.toLowerCase() === 'yes';
+                    }
+                }
+                
+                obj[key] = value;
+            }
+        });
+        
+        return obj;
+    });
+  }
+
+  transformPriceDataNormalized(data) {
+    const headers = data[0];
+    
+    return data.slice(1).map(row => {
+        const obj = {
+            id: row[0] // Unit становится id
+        };
+        
+        headers.forEach((header, index) => {
+            if (header !== "" && index !== 0 && index !== 1) {
+                let key = header
+                    .replace(/,/g, '')
+                    .replace(/\s+/g, '_')
+                    .toLowerCase();
+                
+                let value = row[index];
+                
+                // Преобразование типов данных
+                if (typeof value === 'string') {
+                    if (key.includes('price')) {
+                        value = parseInt(value.replace(/,/g, '')) || value;
+                    }
+                    else if (key.includes('discount')) {
+                        value = parseFloat(value.replace('%', '')) || value;
+                    }
+                }
+                
+                obj[key] = value;
+            }
+        });
+        
+        return obj;
+    });
+  }
+
+  transformDailyStrategy(data) {
+    const headers = data[0];
+    
+    return data.slice(1).map(row => {
+        const obj = {
+            id: row[0]
+        };
+        
+        headers.forEach((header, index) => {
+            if (header !== "" && index !== 0 && index !== 1) {
+                // Создаем понятные ключи
+                let key = header
+                    .replace(/,/g, '')
+                    .replace(/%/g, 'perc')
+                    .replace(/\s+/g, '_')
+                    .toLowerCase();
+                
+                // Улучшаем названия ключей
+                key = key
+                    .replace('adr_idr', 'daily_rate_idr')
+                    .replace('monthly_proceedings_idr', 'monthly_revenue_idr')
+                    .replace('net_proceedings_idr', 'net_revenue_idr')
+                    .replace('investor_proceedings_idr', 'investor_income_idr')
+                    .replace('mc_charge_idr', 'management_fee_idr')
+                    .replace('annualised_roi', 'annual_roi')
+                    .replace('pbp_years', 'payback_period_years');
+                
+                let value = row[index];
+                
+                if (typeof value === 'string') {
+                    if (key.includes('idr') || key.includes('usd') || key.includes('investment')) {
+                        value = parseFloat(value.replace(/,/g, '')) || value;
+                    }
+                    else if (key.includes('perc') || key.includes('roi') || key.includes('occupancy') || key.includes('fee') || key.includes('charge')) {
+                        value = parseFloat(value.replace('%', '')) || value;
+                    }
+                    else if (key.includes('payback_period')) {
+                        value = parseFloat(value) || value;
+                    }
+                }
+                
+                obj[key] = value;
+            }
+        });
+        
+        return obj;
+    });
+  }
+
+  transformMonthlyStrategy(data) {
+    const headers = data[0];
+    
+    return data.slice(1).map(row => {
+        const obj = {
+            id: row[0]
+        };
+        
+        headers.forEach((header, index) => {
+            if (header !== "" && index !== 0 && index !== 1) {
+                let key = header
+                    .replace(/,/g, '')
+                    .replace(/%/g, 'perc')
+                    .replace(/\s+/g, '_')
+                    .toLowerCase();
+
+                    key = key
+                    .replace('adr_idr', 'daily_rate_idr')
+                    .replace('monthly_proceedings_idr', 'monthly_revenue_idr')
+                    .replace('net_proceedings_idr', 'net_revenue_idr')
+                    .replace('investor_proceedings_idr', 'investor_income_idr')
+                    .replace('mc_charge_idr', 'management_fee_idr')
+                    .replace('annualised_roi', 'annual_roi')
+                    .replace('pbp_years', 'payback_period_years');
+                
+                let value = row[index];
+                
+                if (typeof value === 'string') {
+                    // if (value === '-') {
+                    //     value = 0;
+                    // }
+                    if (key.includes('idr') || key.includes('usd') || key.includes('investment')) {
+                        value = parseFloat(value.replace(/,/g, '')) || value;
+                    }
+                    else if (key.includes('perc') || key.includes('roi') || key.includes('occupancy') || key.includes('fee') || key.includes('charge')) {
+                        value = parseFloat(value.replace('%', '')) || value;
+                    }
+                    else if (key.includes('payback_period')) {
+                        value = parseFloat(value) || value;
+                    }
+                }
+                
+                obj[key] = value;
+            }
+        });
+        
+        return obj;
+    });
+  }
+
+  transformRentalRate(data) {
+    const headers = data[0];
+    
+    return data.slice(1).map(row => {
+        const obj = {
+            id: row[0]
+        };
+        
+        headers.forEach((header, index) => {
+            if (header !== "" && index !== 0 && index !== 1) {
+                let key = header
+                    .replace(/,/g, '')
+                    .replace(/%/g, 'perc')
+                    .replace(/\s+/g, '_')
+                    .toLowerCase();
+                
+                let value = row[index];
+                
+                if (typeof value === 'string') {
+                    if (key.includes('idr')) {
+                        value = parseFloat(value.replace(/,/g, '')) || value;
+                    }
+                    else if (key.includes('perc')) {
+                        value = parseFloat(value.replace('%', '')) || value;
+                    }
+                }
+                
+                obj[key] = value;
+            }
+        });
+        
+        return obj;
+    });
+  }
+
+  // --- Fetch with simple in-memory caching ---
+  async fetchData(range) {
+    const cacheKey = `sheets_${range}`;
+    const cachedData = this.getCacheData(cacheKey);
+    if (cachedData) return cachedData;
+
+    try {
+      const url = `${this.baseUrl}/${this.spreadsheetId}/values/${encodeURIComponent(range)}?key=${this.apiKey}`;
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const values = Array.isArray(data.values) ? data.values : [];
+
+      this.setCacheData(cacheKey, values);
+      return values;
+    } catch (error) {
+      console.error('Error fetching Google Sheets data:', error);
+      throw error;
     }
-    const data = await response.json();
-    console.log('Данные из Google Sheets:', data.values);
-    return data; // Передаем данные на обработку
-    return processSheetData(data.values); // Передаем данные на обработку
-  } catch (error) {
-    console.error('Ошибка при получении данных из Google Sheets:', error);
-    // Здесь можно реализовать пользовательское уведомление об ошибке
-    return null;
+  }
+
+  // --- Robust number parser ---
+  parseNumber(value) {
+    if (value === null || value === undefined || value === '') return 0;
+    const s = String(value).trim();
+
+    // handle parentheses for negative numbers: "(1,000)" -> -1000
+    const isParenthesesNegative = /^\(.*\)$/.test(s);
+    let cleaned = s.replace(/[^\d.\-]/g, '');
+
+    // If cleaned becomes empty, return 0
+    if (cleaned === '' || cleaned === '.' || cleaned === '-' ) return 0;
+
+    const parsed = parseFloat(cleaned);
+    if (isNaN(parsed)) return 0;
+
+    return isParenthesesNegative ? -Math.abs(parsed) : parsed;
+  }
+
+  // --- Parse percent-like values robustly ---
+  // Accepts "70", "70%", 0.7 and returns decimal (0.7)
+  parsePercent(value) {
+    const num = this.parseNumber(value);
+    if (num === 0) return 0;
+
+    // If it's clearly > 1 and looks like percent (70 -> 0.7)
+    if (Math.abs(num) > 1 && Math.abs(num) <= 10000) {
+      return num / 100;
+    }
+
+    // If already a decimal (0.7) just return
+    return num;
+  }
+
+  async getUnits() {
+      const unitsMap = await this.fetchData(this.staticTable.units);
+      this.units.value = this.createUnitsArray(unitsMap)
+      return this.units.value
+  }
+
+  async getDataUnits() {
+      const unitsMap = await this.fetchData(this.staticTable.dataUnits);
+      this.unitsData.value = this.transformDataNormalized(unitsMap)
+      return this.unitsData.value
+  }
+
+  async getDataPriceUnits() {
+      const unitsMap = await this.fetchData(this.staticTable.pricesData);
+      this.unitsPricesData.value = this.transformPriceDataNormalized(unitsMap)
+      return this.unitsPricesData.value
+  }
+
+  async getDataDailyStrategy() {
+      const unitsMap = await this.fetchData(this.staticTable.dailyStrategy);
+      this.dailyStrategy.value = this.transformDailyStrategy(unitsMap)
+      return this.dailyStrategy.value
+  }
+
+  async getDataMonthlyStrategy() {
+      const unitsMap = await this.fetchData(this.staticTable.monthlyStrategy);
+      this.monthlyStrategy.value = this.transformMonthlyStrategy(unitsMap)
+      return this.monthlyStrategy.value
+  }
+
+  async getDataRentalRate() {
+      const unitsMap = await this.fetchData(this.staticTable.rentalRate);
+      this.rentalRate.value = this.transformRentalRate(unitsMap)
+      return this.rentalRate.value
+  }
+
+  async getDataCourse() {
+      const unitsMap = await this.fetchData(this.staticTable.course);
+      this.course.value = unitsMap[0][2]
+      return this.course.value
+  }
+
+  async getSelectedPrice() {
+      const unitsMap = await this.fetchData(this.staticTable.selectedPrice);
+      this.selectedPrice = Number(unitsMap.flat().join(""))
+      return this.selectedPrice
+  }
+
+  // --- Simple in-memory cache helpers ---
+  setCacheData(key, data, expiry = 5 * 60 * 1000) {
+    this.cache.set(key, { data, timestamp: Date.now(), expiry });
+  }
+
+  getCacheData(key) {
+    const cached = this.cache.get(key);
+    if (!cached) return null;
+    if (Date.now() - cached.timestamp > cached.expiry) {
+      this.cache.delete(key);
+      return null;
+    }
+    return cached.data;
   }
 }
 
-// Функция для обработки полученных данных и приведения их к удобному формату
-function processSheetData(values) {
-  if (!values || values.length === 0) {
-    return [];
-  }
-
-  // Предполагаем следующую структуру столбцов из вашей таблицы:
-  // A: Имя коттеджа (например, "Вилла А")
-  // B: Площадь
-  // C: Количество спален
-  // D: Стоимость ($)
-  // E: Ежемесячный доход (помесячно) ($)
-  // F: Заполняемость (помесячно) (%)
-  // G: Доход за ночь (посуточно) ($)
-  // H: Заполняемость (посуточно) (%)
-  // I: Годовые эксплуатационные расходы ($)
-
-  return values.map(row => ({
-    name: row[0] || 'N/A',
-    area: parseFloat(row[1]) || 0,
-    bedrooms: parseInt(row[2]) || 0,
-    cost: parseFloat(row[3]) || 0,
-    monthly_rental_income: parseFloat(row[4]) || 0,
-    monthly_occupancy: parseFloat(row[5]) / 100 || 0, // Переводим проценты в десятичную дробь
-    daily_rental_income: parseFloat(row[6]) || 0,
-    daily_occupancy: parseFloat(row[7]) / 100 || 0, // Переводим проценты в десятичную дробь
-    annual_operating_costs: parseFloat(row[8]) || 0,
-  }));
-}
+export default new GoogleSheetsService();

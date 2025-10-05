@@ -12,6 +12,7 @@
           <div class="investment__aside">
             <h5 class="investment__title">Select Your<br />Investment Unit</h5>
             <div class="investment__image-wrapper">
+              <AppBedrooms class="investment__image-bedrooms" :units="unitData" :selectedUnit="selectedUnit" />
               <img class="investment__image" src="@/assets/images/investment.png" alt="">
             </div>
           </div>
@@ -25,9 +26,9 @@
                 <span class="investment__filters-label">Available Investment Units</span>
                 <p class="investment__filters-subtitle">Choose type of finish:</p>
                 <div class="investment__filters-buttons">
-                  <UiButton class="investment__button" variant="outline-brown" size="lg" shape="rounded">premium
-                  </UiButton>
-                  <UiButton class="investment__button active" variant="outline-brown" size="lg" shape="rounded">balanced
+                  <UiButton v-for="(value, idx) in typology" :key="idx" class="investment__button"
+                    variant="outline-brown" size="lg" shape="rounded" @click="changeFinish(value.id)"
+                    :class="{ 'active': selectedFinish === value.id }">{{ value.name }}
                   </UiButton>
                 </div>
               </div>
@@ -35,18 +36,10 @@
               <div class="investment__filters-group">
                 <span class="investment__filters-subtitle">Choose Type of Villa:</span>
                 <div class="investment__filters-buttons">
-                  <UiButton class="investment__button" variant="outline-brown" size="lg" shape="rounded">all units
-                  </UiButton>
-                  <UiButton class="investment__button active" variant="outline-brown" size="lg" shape="rounded">2
-                    Bedroom
-                  </UiButton>
-                  <UiButton class="investment__button" variant="outline-brown" size="lg" shape="rounded">3 Bedroom
-                  </UiButton>
-                  <UiButton class="investment__button" variant="outline-brown" size="lg" shape="rounded">4 Bedroom
-                  </UiButton>
-                  <UiButton class="investment__button" variant="outline-brown" size="lg" shape="rounded">5 Bedroom
-                  </UiButton>
-                  <UiButton class="investment__button" variant="outline-brown" size="lg" shape="rounded">Best ROI
+                  <UiButton class="investment__button"
+                    :class="{ 'active': selectedBr === br.br || selectedBr === br.count_br }" variant="outline-brown"
+                    size="lg" shape="rounded" v-for="(br, idx) in brs" :key="idx" @click="selectBr(br)">
+                    {{ br.count_br ? br.count_br + ' Bedroom' : br.br }}
                   </UiButton>
                 </div>
               </div>
@@ -54,25 +47,25 @@
 
             <!-- список юнитов -->
             <div class="investment__list" :class="{ 'investment__list--more': isMore }">
-              <div class="investment__item" v-for="idx in 13" :key="idx">
+              <div class="investment__item" v-for="(unit, idx) in filteredUnits" :key="idx" @click="selectUnit(unit)">
                 <div class="investment__item-top">
-                  <span class="investment__item-name">Unit 7 - 4BR</span>
+                  <span class="investment__item-name">{{ unit.id }} - {{ getUnitBr(unit) }}</span>
                   <div class="investment__item-tags">
                     <UiButton class="investment__button investment__button-tag" variant="outline-dark-yellow"
                       shape="rounded" size="md">Phase 2
                     </UiButton>
                     <UiButton class="investment__button investment__button-tag" variant="outline-dark-yellow"
-                      shape="rounded" size="md">Premium</UiButton>
+                      shape="rounded" size="md">{{ getUnitTypology(unit) }}</UiButton>
                   </div>
                 </div>
                 <div class="investment__item-middle">
-                  <p class="investment__description">160m² • Premium Location</p>
+                  <p class="investment__description">{{ unit.land_area_m2 }}m² • Premium Location</p>
                 </div>
                 <div class="investment__item-bottom">
                   <UiButton class="investment__roi" variant="solid-yellow" shape="rounded" size="md">Annualised ROI:
                     10.6%
                   </UiButton>
-                  <span class="investment__price">$281 239</span>
+                  <span class="investment__price">{{ formatCurrency(unit.price_usd) }}</span>
                 </div>
               </div>
             </div>
@@ -92,15 +85,125 @@
   </section>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
+<script setup>
+import GoogleSheetsService from '@/services/googlesheets'
+import { computed, ref } from 'vue';
 import IconArrowDown from '../icons/IconArrowDown.vue';
 import UiButton from '../ui/uiButton.vue';
+import AppBedrooms from '../AppBedrooms.vue';
+
+const unitData = GoogleSheetsService.unitsData
+
+const typology = [
+  {
+    id: 'basic',
+    name: 'balanced'
+  },
+  {
+    id: 'premium',
+    name: 'Premium'
+  }
+]
 
 const isMore = ref(false)
+const selectedBr = ref(null)
+const selectedFinish = ref(null)
+const selectedUnit = ref(null)
+
+const filteredUnits = computed(() => {
+  let filtered = unitData.value;
+
+  // Фильтрация по BR
+  if (selectedBr.value) {
+    filtered = filtered.filter(unit => getUnitBr(unit) === selectedBr.value);
+  }
+
+  // Фильтрация по finish (typology)
+  if (selectedFinish.value) {
+    filtered = filtered.filter(unit =>
+      unit.typology.toLowerCase().includes(selectedFinish.value.toLowerCase())
+    );
+  }
+
+  return filtered;
+});
+
+const unitsBr = computed(() => {
+  return unitData.value.map(unit => {
+    const br = unit.typology.split(' ')[0];
+    return {
+      unit: unit.id,
+      br: br,
+      house: 1 // как в примере, всегда 1
+    };
+  });
+})
+
+const brs = computed(() => {
+  const brMap = {};
+  if (!unitData.value) {
+    return []
+  }
+
+  unitData.value.forEach(unit => {
+    const br = unit.typology.split(' ')[0];
+    if (!brMap[br]) {
+      brMap[br] = {
+        count_br: parseInt(br), // берем число из BR (3 из "3Br")
+        br: br
+      };
+    }
+  });
+  const arr = Object.values(brMap).sort((a, b) => a.count_br - b.count_br)
+  arr.unshift({ count_br: null, br: 'all units' })
+  console.log(arr)
+
+  return arr;
+});
+
+const getUnitBr = (unit) => {
+  const unitBr = unit.typology.split(' ')[0]
+  return unitBr
+}
+
+const getUnitTypology = (unit) => {
+  const unitBr = unit.typology.split(' ')[1]
+  if (!unitBr) return 'basic'
+  return unitBr
+}
+
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount)
+}
 
 const toggleMore = () => {
   isMore.value = !isMore.value
+}
+
+const selectBr = (br) => {
+  if (!br.count_br) {
+    selectedBr.value = br.count_br
+  } else {
+    selectedBr.value = br.br
+  }
+}
+
+const changeFinish = (finish) => {
+  if (selectedFinish.value === finish) {
+    selectedFinish.value = null
+  } else {
+    selectedFinish.value = finish
+  }
+}
+
+const selectUnit = (unit) => {
+  console.log(unit)
+  selectedUnit.value = unit.id
 }
 </script>
 
@@ -268,6 +371,20 @@ const toggleMore = () => {
 
   &__image-wrapper {
     overflow: hidden;
+    position: relative;
+  }
+
+  &__image-bedrooms {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    :deep(svg) {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   &__image {
@@ -402,6 +519,7 @@ const toggleMore = () => {
   }
 
   &__item {
+    cursor: pointer;
     border-radius: vw(12);
     padding: vw(20);
     border: vw(1) solid $yellow-dark;

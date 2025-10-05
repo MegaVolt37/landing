@@ -319,6 +319,10 @@ onMounted(() => {
     width: fit-content;
     grid-row: 1 / 3;
     grid-column: 1;
+
+    @include mobile {
+      width: min-content;
+    }
   }
 
   &__heading {
@@ -353,7 +357,7 @@ onMounted(() => {
     @include mobile {
       font-size: vmin(32);
       line-height: vmin(48);
-      margin-right: vmin(-43);
+      margin-right: vmin(0);
       margin-top: vmin(-29);
     }
   }

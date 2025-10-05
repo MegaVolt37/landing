@@ -12,7 +12,7 @@
 import { computed, getCurrentInstance } from 'vue';
 
 const root = getCurrentInstance()
-console.log(root)
+
 interface IMarker {
   id: string,
   title?: string,

@@ -9,16 +9,14 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AnalysisSection: typeof import('./src/components/sections/AnalysisSection.vue')['default']
+    AppBedrooms: typeof import('./src/components/AppBedrooms.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     AppForm: typeof import('./src/components/AppForm.vue')['default']
     AppMap: typeof import('./src/components/AppMap.vue')['default']
     AppMapTooltip: typeof import('./src/components/AppMapTooltip.vue')['default']
     AppMapTooltipCenter: typeof import('./src/components/AppMapTooltipCenter.vue')['default']
     AppTabs: typeof import('./src/components/AppTabs.vue')['default']
-    AppTest: typeof import('./src/components/AppTest.vue')['default']
-    AppTestCloud: typeof import('./src/components/AppTestCloud.vue')['default']
     CalculatorSection: typeof import('./src/components/sections/CalculatorSection.vue')['default']
-    CalculatorSectionCloud: typeof import('./src/components/sections/CalculatorSectionCloud.vue')['default']
     DecorSection: typeof import('./src/components/sections/DecorSection.vue')['default']
     DeliversSection: typeof import('./src/components/sections/DeliversSection.vue')['default']
     DocumentationSection: typeof import('./src/components/sections/DocumentationSection.vue')['default']
