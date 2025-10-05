@@ -61,39 +61,39 @@ import ImageSven from '@/assets/images/SVEN.jpg';
 import { computed, ref } from 'vue';
 import AppTabs from '../AppTabs.vue';
 
-const activeAuthor = ref('Landscape Designer Message')
+const activeAuthor = ref(`Chairman’s Message`)
 const authors = [
-  {
-    id: "Landscape Designer Message",
-    name: "GEORGY",
-    image: ImageNicholas,
-    heading: "Landscape Designer Message",
-    subheading: "We are",
-    message:
-      "We&nbsp;believe luxury isn&rsquo;t about excess. It&rsquo;s about creating places people genuinely connect with. Homes and spaces designed around lifestyle, culture, and long-term value. We&nbsp;see Southeast Asia as&nbsp;one of&nbsp;the most exciting markets in&nbsp;the world, where growth and cultural richness come together. We&rsquo;re combining smart design, sustainability, and authenticity to&nbsp;create lasting impact for residents, investors, and communities.",
-    about:
-      "Nicholas Longfellow,<br />landscaping artist,<br />Bali Living Design founder"
-  },
-  {
-    id: "Architect Message",
-    name: "Another Founder",
-    image: ImageJafni,
-    heading: "Architect Message",
-    subheading: "We are",
-    message:
-      "The Verdana Residences embraces natural light, encourages cross-ventilation through strategic airflow, and uses sustainable materials like wood and stone. The result is a harmonious connection with the surrounding environment.",
-    about: "Jafni Zul Fahnmi,<br />Nawangseta Architect"
-  },
   // {
-  //   id: "Chairman’s Message",
-  //   name: "Chairman’s Message",
-  //   image: ImageSven,
-  //   heading: "Chairman’s Message",
+  //   id: "Landscape designer's message",
+  //   name: "Landscape designer's message",
+  //   image: ImageNicholas,
+  //   heading: "Landscape designer's message",
   //   subheading: "We are",
   //   message:
-  //     "In Sanur, I seek to craft homes that go beyond shelter—celebrating Balinese identity, inviting meaningful connections, and offering discerning international residents a harmonious blend of authenticity and contemporary comfort.",
-  //   about: "Sven Osmers,<br />Chairman & Co-Founder of Labna Capital"
-  // }
+  //     "We&nbsp;believe luxury isn&rsquo;t about excess. It&rsquo;s about creating places people genuinely connect with. Homes and spaces designed around lifestyle, culture, and long-term value. We&nbsp;see Southeast Asia as&nbsp;one of&nbsp;the most exciting markets in&nbsp;the world, where growth and cultural richness come together. We&rsquo;re combining smart design, sustainability, and authenticity to&nbsp;create lasting impact for residents, investors, and communities.",
+  //   about:
+  //     "Nicholas Longfellow,<br />landscaping artist,<br />Bali Living Design founder"
+  // },
+  // {
+  //   id: "Architect's message",
+  //   name: "Architect's message",
+  //   image: ImageJafni,
+  //   heading: "Architect's message",
+  //   subheading: "We are",
+  //   message:
+  //     "The Verdana Residences embraces natural light, encourages cross-ventilation through strategic airflow, and uses sustainable materials like wood and stone. The result is a harmonious connection with the surrounding environment.",
+  //   about: "Jafni Zul Fahnmi,<br />Nawangseta Architect"
+  // },
+  {
+    id: "Chairman’s Message",
+    name: "Chairman’s Message",
+    image: ImageSven,
+    heading: "Chairman’s Message",
+    subheading: "We are",
+    message:
+      "Labna Capital was built on a shared vision and 50+ years of experience in real estate, strategy, and finance. From global boardrooms to local communities, we’ve seen what makes projects truly meaningful. We believe luxury isn’t about excess. It’s about creating places people genuinely connect with. Homes and spaces designed around lifestyle, culture, and long-term value. We see Southeast Asia as one of the most exciting markets in the world, where growth and cultural richness come together. We’re combining smart design, sustainability, and authenticity to create lasting impact for residents, investors, and communities.",
+    about: "Sven Osmers,<br />Chairman & Co-Founder of Labna Capital"
+  }
 ];
 
 const currentAuthor = computed(() =>
@@ -345,7 +345,7 @@ const currentAuthor = computed(() =>
     font-size: vw(48);
     line-height: vw(65);
     letter-spacing: 0px;
-    color: $yellow;
+    color: $yellow-light;
     display: inline-block;
     margin-left: auto;
     margin-right: vw(-19);
@@ -370,6 +370,7 @@ const currentAuthor = computed(() =>
     height: 100%;
 
     @include mobile {
+      height: auto;
       margin-top: vmin(24);
       grid-row: 3;
       grid-column: 1;
@@ -430,6 +431,7 @@ const currentAuthor = computed(() =>
   }
 
   &__about {
+    margin-top: auto;
     padding-top: vw(45);
     margin-left: vw(-45);
     margin-right: vw(-45);

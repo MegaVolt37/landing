@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="slider">
-      <img class="swipe-icon" src="@/assets/images/hand-gesture.png" alt="hand-gesture">
+      <img class="swipe-icon" src="@/assets/images/arrow-slider.svg" alt="arrow-slider">
       <swiper-container :slides-per-view="3" class="slider__wrapper" :breakpoints="{
         0: { slidesPerView: 1.2, enabled: true },
         768: { slidesPerView: 3, enabled: false }

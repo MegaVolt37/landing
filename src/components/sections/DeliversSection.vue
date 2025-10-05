@@ -5,8 +5,8 @@
         <div class="delivery__title-container">
           <div class="delivery__title-wrapper">
             <h2 class="delivery__heading">Why VERDANA Delivers Superior Returns</h2>
-            <span class="delivery__subheading"><span><span class="montecarloscriptb">g</span>rade</span>
-              <span>investment</span></span>
+            <!-- <span class="delivery__subheading"><span><span class="montecarloscriptb">g</span>rade</span>
+              <span> investment</span></span> -->
           </div>
         </div>
 
@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="slider">
-        <img class="swipe-icon" src="@/assets/images/hand-gesture.png" alt="hand-gesture">
+        <img class="swipe-icon" src="@/assets/images/arrow-slider.svg" alt="arrow-slider">
         <swiper-container :slides-per-view="4" class="slider__wrapper" :breakpoints="{
           0: { slidesPerView: 1.2, enabled: true },
           768: { slidesPerView: 4, enabled: false }
