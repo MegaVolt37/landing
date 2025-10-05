@@ -52,15 +52,16 @@
                 <div class="investment__item-top">
                   <span class="investment__item-name">{{ unit.id }} - {{ getUnitBr(unit) }}</span>
                   <div class="investment__item-tags">
-                    <UiButton class="investment__button investment__button-tag" variant="outline-dark-yellow"
+                    <!-- <UiButton class="investment__button investment__button-tag" variant="outline-dark-yellow"
                       shape="rounded" size="md">Phase 2
-                    </UiButton>
+                    </UiButton> -->
                     <UiButton class="investment__button investment__button-tag" variant="outline-dark-yellow"
                       shape="rounded" size="md">{{ getUnitTypology(unit) }}</UiButton>
                   </div>
                 </div>
                 <div class="investment__item-middle">
-                  <p class="investment__description">{{ unit.land_area_m2 }}m² • Premium Location</p>
+                  <p class="investment__description">{{ unit.land_area_m2 }}m²</p>
+                  <p class="investment__description">Premium Location</p>
                 </div>
                 <div class="investment__item-bottom">
                   <UiButton class="investment__roi" variant="solid-yellow" shape="rounded" size="md">Annualised ROI:
@@ -169,7 +170,8 @@ const getUnitBr = (unit) => {
 
 const getUnitTypology = (unit) => {
   const unitBr = unit.typology.split(' ')[1]
-  if (!unitBr) return 'basic'
+  if (!unitBr) return 'balanced'
+  if (unitBr === 'basic') return 'balanced'
   return unitBr
 }
 
