@@ -12,7 +12,8 @@
           <div class="investment__aside">
             <h5 class="investment__title">Select Your<br />Investment Unit</h5>
             <div class="investment__image-wrapper">
-              <AppBedrooms class="investment__image-bedrooms" :units="unitData" :selectedUnit="selectedUnit" />
+              <AppBedrooms class="investment__image-bedrooms" :units="unitData" :selectedUnit="selectedUnit"
+                :clearUnit="clearUnit" />
               <img class="investment__image" src="@/assets/images/investment.png" alt="">
             </div>
           </div>
@@ -204,6 +205,10 @@ const changeFinish = (finish) => {
 const selectUnit = (unit) => {
   console.log(unit)
   selectedUnit.value = unit.id
+}
+
+const clearUnit = () => {
+  selectedUnit.value = null
 }
 </script>
 

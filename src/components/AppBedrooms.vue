@@ -75,6 +75,7 @@ type FinishType = "basic" | "premium" | ""; // пустая строка для 
 interface IProps {
   units: Unit[]
   selectedUnit: string | null
+  clearUnit: () => void
 }
 
 const props = defineProps<IProps>()
@@ -274,6 +275,7 @@ const selectDefault = () => {
 
 // Обработчик клика по секции
 const handleSectionClick = async (index: number) => {
+  props.clearUnit()
   // Если кликаем на уже выбранную секцию - снимаем выделение
   if (selectedSection.value === index) {
     selectedSection.value = null
@@ -292,6 +294,7 @@ const handleSectionClick = async (index: number) => {
 
 // Обработчик клика по контейнеру (для сброса при клике вне домов)
 const handleContainerClick = (event: MouseEvent) => {
+  props.clearUnit()
   const target = event.target as HTMLElement
 
   // Проверяем, был ли клик по дому (интерактивной секции)
@@ -305,6 +308,7 @@ const handleContainerClick = (event: MouseEvent) => {
   // Если клик был не по дому и не по тултипу - сбрасываем выделение
   if (!isHouseClick && !isTooltipClick) {
     selectedSection.value = null
+    hoveredSection.value = null
     currentTooltip.value = ''
     console.log('Сброс выделения - клик вне домов')
   }
@@ -329,6 +333,7 @@ const updateTooltipPosition = async (index: number) => {
 
 // Обработчик клика по документу для сброса при клике вне
 const handleDocumentClick = (event: MouseEvent) => {
+  props.clearUnit()
   const target = event.target as HTMLElement
 
   // Проверяем, был ли клик внутри нашего компонента
@@ -338,6 +343,7 @@ const handleDocumentClick = (event: MouseEvent) => {
   // Если клик был вне нашего компонента - сбрасываем выделение
   if (!isInsideContainer) {
     selectedSection.value = null
+    hoveredSection.value = null
     currentTooltip.value = ''
     console.log('Сброс выделения - клик вне компонента')
   }
