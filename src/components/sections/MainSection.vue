@@ -108,7 +108,7 @@ const toggleMenu = () => {
     left: 0;
     position: absolute;
     width: 100%;
-    background-image: url('@/assets/images/background-home.png');
+    background-image: url('@/assets/images/background-home.webp');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
