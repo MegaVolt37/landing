@@ -6,10 +6,10 @@
 
   <DeliversSection id="residents" />
   <GallerySection />
-  <InvestmentSection />
+  <InvestmentSection v-if="!isProduction" />
   <!-- <CalculatorSection id="calculator" /> -->
   <!-- <CalculatorSectionCloud v-if="!isProduction" id="calculator" /> -->
-  <CalculatorSection id="calculator" />
+  <CalculatorSection v-if="!isProduction" id="calculator" />
   <AnalysisSection />
   <DecorSection />
   <!-- <PerfomanceSection id="location" /> -->
