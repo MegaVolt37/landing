@@ -25,11 +25,11 @@
             <div class="investment__filters">
               <div class="investment__filters-group">
                 <span class="investment__filters-label">Available Investment Units</span>
-                <p class="investment__filters-subtitle">Choose type of finish:</p>
+                <p class="investment__filters-subtitle">Choose currency:</p>
                 <div class="investment__filters-buttons">
-                  <UiButton v-for="(value, idx) in typology" :key="idx" class="investment__button"
-                    variant="outline-brown" size="lg" shape="rounded" @click="changeFinish(value.id)"
-                    :class="{ 'active': selectedFinish === value.id }">{{ value.name }}
+                  <UiButton v-for="(value, idx) in currency" :key="idx" class="investment__button"
+                    variant="outline-brown" size="lg" shape="rounded" @click="changeCurrency(value.id)"
+                    :class="{ 'active': selectedCurrency === value.id }">{{ value.name }}
                   </UiButton>
                 </div>
               </div>
@@ -61,13 +61,14 @@
                 </div>
                 <div class="investment__item-middle">
                   <p class="investment__description">{{ unit.land_area_m2 }}m²</p>
-                  <p class="investment__description">Premium Location</p>
+
                 </div>
                 <div class="investment__item-bottom">
-                  <UiButton class="investment__roi" variant="solid-yellow" shape="rounded" size="md">Annualised ROI:
+                  <p class="investment__description">Premium Location</p>
+                  <!-- <UiButton class="investment__roi" variant="solid-yellow" shape="rounded" size="md">Annualised ROI:
                     10.6%
-                  </UiButton>
-                  <span class="investment__price">{{ formatCurrency(unit.price_usd) }}</span>
+                  </UiButton> -->
+                  <span class="investment__price">{{ formatCurrency(unit) }}</span>
                 </div>
               </div>
             </div>
@@ -107,9 +108,21 @@ const typology = [
   }
 ]
 
+const currency = [
+  {
+    id: 'idr',
+    name: 'IDR'
+  },
+  {
+    id: 'usd',
+    name: 'USD'
+  }
+]
+
 const isMore = ref(false)
 const selectedBr = ref(null)
 const selectedFinish = ref(null)
+const selectedCurrency = ref('idr')
 const selectedUnit = ref(null)
 
 const filteredUnits = computed(() => {
@@ -175,13 +188,36 @@ const getUnitTypology = (unit) => {
   return unitBr
 }
 
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(amount)
+const formatCurrency = (price) => {
+  const value = selectedCurrency.value === 'usd' ? price.price_usd : price.price_idr
+  // return selectedCurrency.value === 'usd'
+  //   ? formatToUsd(priceIdr)
+  //   : formatCurrency(priceIdr)
+  // return new Intl.NumberFormat('en-US', {
+  //   style: 'currency',
+  //   currency: 'USD',
+  //   minimumFractionDigits: 0,
+  //   maximumFractionDigits: 0
+  // }).format(amount)
+
+  const amount = value == null ? 0 : Number(value)
+  if (Number.isNaN(amount)) return '—'
+
+  if (selectedCurrency.value === 'usd') {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount)
+  } else {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount)
+  }
 }
 
 const toggleMore = () => {
@@ -202,6 +238,10 @@ const changeFinish = (finish) => {
   } else {
     selectedFinish.value = finish
   }
+}
+
+const changeCurrency = (currency) => {
+  selectedCurrency.value = currency
 }
 
 const selectUnit = (unit) => {
@@ -585,11 +625,11 @@ const clearUnit = () => {
   &__tag {}
 
   &__item-middle {
-    margin-top: vw(5);
+    margin-top: vw(25);
     min-height: vw(75);
 
     @include mobile {
-      margin-top: vmin(5);
+      margin-top: vmin(10);
       min-height: vmin(50);
     }
   }
@@ -612,6 +652,11 @@ const clearUnit = () => {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    gap: vw(20);
+
+    @include mobile {
+      gap: vmin(10);
+    }
   }
 
   &__roi {

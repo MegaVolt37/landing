@@ -5,11 +5,11 @@
   </div>
 
   <DeliversSection id="residents" />
-  <GallerySection />
+  <GallerySection @openForm="toggleForm" />
   <InvestmentSection />
   <!-- <CalculatorSection id="calculator" /> -->
   <!-- <CalculatorSectionCloud v-if="!isProduction" id="calculator" /> -->
-  <CalculatorSection id="calculator" />
+  <CalculatorSection id="calculator" @openForm="toggleForm" />
   <AnalysisSection />
   <DecorSection />
   <!-- <PerfomanceSection id="location" /> -->

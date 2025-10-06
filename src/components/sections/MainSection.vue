@@ -13,7 +13,7 @@
         </div>
 
         <div class="header__actions">
-          <span class="header__lang">en</span>
+
           <UiButton class="header__btn" variant="solid-yellow" shape="rounded" size="lg" @click="$emit('openForm')">
             Contact us
           </UiButton>
@@ -47,7 +47,8 @@
       </div>
     </div>
     <Transition name="slide-left">
-      <MainMenu v-if="isOpenMenu" :class="{ 'opened': isOpenMenu }" :isOpen="isOpenMenu" @close="toggleMenu" />
+      <MainMenu v-if="isOpenMenu" :class="{ 'opened': isOpenMenu }" :isOpen="isOpenMenu"
+        @openForm="$emit('openForm'); toggleMenu()" @close="toggleMenu" />
     </Transition>
 
   </div>

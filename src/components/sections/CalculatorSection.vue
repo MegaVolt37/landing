@@ -139,7 +139,8 @@
             Decisions are made by the user independently at their own risk.
             This is not an investment recommendation.
           </p>
-          <UiButton variant="solid-yellow" shape="rounded" size="lg" class="calculator__button">
+          <UiButton @click="$emit('openForm')" variant="solid-yellow" shape="rounded" size="lg"
+            class="calculator__button">
             Detailed Financial Analysis
           </UiButton>
         </div>

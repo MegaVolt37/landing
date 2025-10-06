@@ -20,7 +20,7 @@
       </div>
 
 
-      <UiButton class="gallery__button" variant="solid-green" shape="circle" size="lg">
+      <UiButton class="gallery__button" variant="solid-green" shape="circle" size="lg" @click="$emit('openForm')">
         <span class="gallery__button-text">LEARN MORE</span>
       </UiButton>
     </div>

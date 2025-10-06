@@ -87,8 +87,8 @@ register();
 
 <style scoped lang="scss">
 .secure {
-  padding: vw(45) vw(43) 0 vw(43);
-  margin-bottom: vw(-45);
+  padding: vw(45) vw(43) vw(20) vw(43);
+  // margin-bottom: vw(20);
   overflow: hidden;
 
   @include mobile {

@@ -26,7 +26,9 @@
           </ul>
           <div class="menu__contacts">
             <a href="tel:+6281139408858" class="menu__phone">+62 811 3940 8858</a>
-            <UiButton class="menu__contact" variant="solid-yellow" shape="rounded" size="lg">Contact us</UiButton>
+            <UiButton class="menu__contact" variant="solid-yellow" shape="rounded" size="lg"
+              @click="$emit('openForm' as any)">
+              Contact us</UiButton>
           </div>
         </nav>
       </div>
