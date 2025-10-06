@@ -34,9 +34,11 @@
               transparent returns,
               and developer-direct access with full legal clarity.</p>
             <div class="main-info__actions">
-              <UiButton class="main-info__button" variant="solid-yellow" shape="rounded" size="lg">Calculate Returns
+              <UiButton class="main-info__button" variant="solid-yellow" shape="rounded" size="lg"
+                @click="$emit('openForm')">Calculate Returns
               </UiButton>
-              <UiButton class="main-info__button" variant="outline-transparent-yellow" shape="rounded" size="lg">View
+              <UiButton class="main-info__button" variant="outline-transparent-yellow" shape="rounded" size="lg"
+                @click="$emit('openForm')">View
                 Presentation
               </UiButton>
             </div>
