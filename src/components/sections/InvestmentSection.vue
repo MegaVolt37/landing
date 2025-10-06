@@ -13,7 +13,7 @@
             <h5 class="investment__title">Select Your<br />Investment Unit</h5>
             <div class="investment__image-wrapper">
               <AppBedrooms class="investment__image-bedrooms" :units="unitData" :selectedUnit="selectedUnit"
-                :clearUnit="clearUnit" />
+                :selectedCurrency="selectedCurrency" :clearUnit="clearUnit" />
               <img class="investment__image" src="@/assets/images/investment.png" alt="">
             </div>
           </div>

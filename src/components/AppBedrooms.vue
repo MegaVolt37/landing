@@ -27,13 +27,13 @@
         </div>
         <div class="investment__item-middle">
           <p class="investment__description">{{ selectedUnit.land_area_m2 }}m²</p>
-          <p class="investment__description">Premium Location</p>
         </div>
         <div class="investment__item-bottom">
-          <UiButton class="investment__roi" variant="solid-yellow" shape="rounded" size="md">Annualised ROI:
+          <p class="investment__description">Premium Location</p>
+          <!-- <UiButton class="investment__roi" variant="solid-yellow" shape="rounded" size="md">Annualised ROI:
             10.6%
-          </UiButton>
-          <span class="investment__price">{{ formatCurrency(selectedUnit.price_usd) }}</span>
+          </UiButton> -->
+          <span class="investment__price">{{ formatCurrency(selectedUnit) }}</span>
         </div>
       </div>
     </div>
@@ -76,6 +76,7 @@ type FinishType = "basic" | "premium" | ""; // пустая строка для 
 interface IProps {
   units: Unit[]
   selectedUnit: string | null
+  selectedCurrency: string
   clearUnit: () => void
 }
 
@@ -163,13 +164,26 @@ const getUnitBr = (unit: any) => {
   return unitBr
 }
 
-const formatCurrency = (amount: any) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(amount)
+const formatCurrency = (price: any) => {
+  const value = props.selectedCurrency === 'usd' ? price.price_usd : price.price_idr
+  const amount = value == null ? 0 : Number(value)
+  if (Number.isNaN(amount)) return '—'
+
+  if (props.selectedCurrency === 'usd') {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount)
+  } else {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount)
+  }
 }
 
 // Конвертируем координаты SVG в координаты экрана
