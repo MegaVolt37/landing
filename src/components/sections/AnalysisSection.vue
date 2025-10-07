@@ -143,8 +143,8 @@ const places = [
     icon: iconBeach,
   },
   {
-    id: "Bali international school",
-    title: "Bali International School",
+    id: "Bali Island School",
+    title: "Bali Island School",
     description: "Drives family rentals and long-term value.",
     position: { lat: -8.679353197943632, lng: 115.25703407690618 },
     type: [

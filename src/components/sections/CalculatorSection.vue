@@ -2,21 +2,25 @@
   <section class="calculator">
     <div class="calculator__header">
       <h4 class="calculator__title">Investment Calculator</h4>
-      <span class="calculator__subtitle">Calculate detailed</span>
+      <p class="calculator__description" v-prevent-widow>
+        Calculate your detailed returns including taxes, management fees, and seasonal
+        variations. Real-time analysis based on current market conditions.
+      </p>
+      <!-- <span class="calculator__subtitle">Calculate detailed</span> -->
     </div>
 
     <div class="calculator__content">
       <div class="calculator__intro">
-        <p class="calculator__description" v-prevent-widow>
+        <!-- <p class="calculator__description" v-prevent-widow>
           Calculate your detailed returns including taxes, management fees, and seasonal
           variations. Real-time analysis based on current market conditions.
-        </p>
-        <div class="calculator__filter">
+        </p> -->
+        <!-- <div class="calculator__filter">
           <UiButton class="calculator__button-flt" variant="outline-yellow" shape="rounded" size="md"
             @click="toggleFilters">
             filter Analysis Results
           </UiButton>
-        </div>
+        </div> -->
         <Transition name="slide-left">
           <div class="calculator__fields" v-if="!isHiddenFilters">
             <span class="calculator__fields-title">filter</span>
@@ -489,7 +493,7 @@ onMounted(async () => {
   &__fields {
     display: flex;
     flex-direction: column;
-    gap: vw(25);
+    gap: vw(14);
 
     @include mobile {
       overflow-y: auto;
@@ -562,6 +566,7 @@ onMounted(async () => {
   }
 
   &__intro {
+    align-items: flex-start;
     padding-right: vw(98);
     display: flex;
     flex-direction: column;
@@ -574,8 +579,9 @@ onMounted(async () => {
   }
 
   &__description {
-    margin-top: vw(-25);
-    margin-bottom: vw(25);
+    max-width: vw(380);
+    // margin-top: vw(-25);
+    // margin-bottom: vw(25);
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
     font-size: vw(16);
@@ -584,6 +590,8 @@ onMounted(async () => {
     color: $white;
 
     @include mobile {
+      max-width: 100%;
+      margin-top: vmin(15);
       font-size: vmin(12);
       line-height: vmin(14);
     }
@@ -592,7 +600,7 @@ onMounted(async () => {
   &__field {
     width: 100%;
     display: grid;
-    gap: vw(20);
+    gap: vw(10);
 
     @include mobile {
       gap: vmin(8);
@@ -616,6 +624,8 @@ onMounted(async () => {
     letter-spacing: 0%;
     text-align: center;
     text-transform: uppercase;
+    padding: vw(8) vw(25);
+    min-width: vw(170);
 
     @include mobile {
       font-size: vmin(9);
@@ -627,7 +637,7 @@ onMounted(async () => {
   &__label {
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
-    font-size: vw(17);
+    font-size: vw(14);
     line-height: vw(22);
     letter-spacing: 0px;
     color: $white;
@@ -777,16 +787,16 @@ onMounted(async () => {
   }
 
   &__results {
-    border: vw(1) solid rgb($yellow, 0.26);
-    padding: vw(10);
-    border-radius: vw(15);
+    // border: vw(1) solid rgb($yellow, 0.26);
+    // padding: vw(10);
+    // border-radius: vw(15);
     display: grid;
     gap: vw(10);
 
     @include mobile {
-      border: vmin(1) solid rgb($yellow, 0.26);
-      padding: vmin(5);
-      border-radius: vmin(9);
+      // border: vmin(1) solid rgb($yellow, 0.26);
+      // padding: vmin(5);
+      // border-radius: vmin(9);
       display: grid;
       gap: vmin(5);
     }
@@ -794,7 +804,7 @@ onMounted(async () => {
 
   &__results-item {
     border: vw(1) solid rgb($yellow, 0.26);
-    padding: vw(30);
+    padding: vw(17) vw(25);
     border-radius: vw(15);
     display: flex;
     gap: vw(70);
@@ -816,7 +826,12 @@ onMounted(async () => {
   }
 
   &__chart {
-    @include mobile {}
+    display: grid;
+    gap: vw(5);
+
+    @include mobile {
+      gap: vmin(5);
+    }
   }
 
   &__chart-label {
@@ -842,8 +857,8 @@ onMounted(async () => {
   &__chart-desc {
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
-    font-size: vw(16);
-    line-height: vw(22);
+    font-size: vw(12);
+    line-height: vw(18);
     letter-spacing: 0px;
     color: $white;
     flex: 0 1 51%;
@@ -860,7 +875,7 @@ onMounted(async () => {
   &__result-label {
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
-    font-size: vw(17);
+    font-size: vw(14);
     line-height: vw(22);
     letter-spacing: 0px;
     color: $white;
@@ -874,7 +889,7 @@ onMounted(async () => {
   &__result-value {
     font-family: 'Vollkorn';
     font-weight: 400;
-    font-size: vw(24);
+    font-size: vw(21);
     line-height: 100%;
     letter-spacing: 0px;
     text-align: right;
@@ -887,9 +902,9 @@ onMounted(async () => {
   }
 
   &__note {
-    margin-top: vw(15);
+    margin-top: vw(5);
     margin-bottom: vw(20);
-    padding-left: vw(30);
+    padding-left: vw(10);
     display: grid;
     grid-template-columns: 1fr auto;
     gap: vw(28);
@@ -933,6 +948,8 @@ onMounted(async () => {
     text-align: center;
     text-transform: uppercase;
     color: $black;
+    padding-left: vw(25);
+    padding-right: vw(25);
 
     @include mobile {
       width: calc(100% + vmin(20));

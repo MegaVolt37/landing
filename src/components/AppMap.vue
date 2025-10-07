@@ -317,7 +317,7 @@ const markers = reactive<IMarker[]>([
     icon: iconPlus,
   },
   {
-    id: "Bali international school",
+    id: "Bali Island School",
     type: "shuttle",
     position: { lat: -8.679252261164812, lng: 115.25698437116502 },
     icon: iconSchool,

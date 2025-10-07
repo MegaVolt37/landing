@@ -1,16 +1,22 @@
 <template>
   <div class="interactive-svg-container" @click="handleContainerClick">
-    <svg ref="svgElement" width="694" height="587" viewBox="0 0 694 587" fill="none" xmlns="http://www.w3.org/2000/svg"
+    <svg ref="svgElement" width="694" height="423" viewBox="0 0 694 423" fill="none" xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink">
-      <rect width="694" height="587" rx="15" fill="url(#pattern0_602_6)" />
+      <mask id="mask0_894_171" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="694" height="423">
+        <rect width="694" height="423" rx="15" fill="#D9D9D9" />
+      </mask>
+      <!-- <rect width="694" height="423" rx="15" fill="url(#pattern0_602_6)" /> -->
 
-      <!-- Интерактивные секции -->
-      <path v-for="(section, index) in sections" :key="index" :ref="el => { sectionRefs[index] = el as SVGPathElement }"
-        :d="section.path" :class="['interactive-section', {
-          'hovered': hoveredSection === index,
-          'selected': selectedSection === index
-        }]" @mouseenter="showHoverTooltip(index)" @mouseleave="hideHoverTooltip"
-        @click.stop="handleSectionClick(index)" />
+      <g mask="url(#mask0_894_171)">
+
+        <!-- Интерактивные секции -->
+        <path v-for="(section, index) in sections" :key="index"
+          :ref="el => { sectionRefs[index] = el as SVGPathElement }" :d="section.path" :class="['interactive-section', {
+            'hovered': hoveredSection === index,
+            'selected': selectedSection === index
+          }]" @mouseenter="showHoverTooltip(index)" @mouseleave="hideHoverTooltip"
+          @click.stop="handleSectionClick(index)" />
+      </g>
 
       <defs>
         <pattern id="pattern0_602_6" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -85,58 +91,58 @@ const props = defineProps<IProps>()
 // Данные секций
 const sections = reactive<Section[]>([
   {
-    path: "M195 210.5L164.5 198V157L156.5 160.5L155.5 159.5L172.5 144.5L254 112.5L273.5 138.5L263 144.5V146.5L223 163.5L203.5 179.5L207.5 182L213.5 179.5V200.5L195 210.5Z",
+    path: "M195 169.5L164.5 157V116L156.5 119.5L155.5 118.5L172.5 103.5L254 71.5L273.5 97.5L263 103.5V105.5L223 122.5L203.5 138.5L207.5 141L213.5 138.5V159.5L195 169.5Z",
     name: "section1",
     tooltip: "Unit 5"
   },
   {
-    path: "M115.5 217.5L120 220L126.5 214.5H129L160.5 238V243L153.5 252.5V259.5L170.5 264.5L178.5 254.5L186 249L209.5 231.5L224 243L243 261L234.5 274L236 282H239L254.5 268.5L253 246.5L241.5 241.5V235.5L253 240V238L231.5 227.5L135 187L115.5 217.5Z",
+    path: "M115.5 176.5L120 179L126.5 173.5H129L160.5 197V202L153.5 211.5V218.5L170.5 223.5L178.5 213.5L186 208L209.5 190.5L224 202L243 220L234.5 233L236 241H239L254.5 227.5L253 205.5L241.5 200.5V194.5L253 199V197L231.5 186.5L135 146L115.5 176.5Z",
     name: "section2",
     tooltip: "Unit 4"
   },
   {
-    path: "M54 332L43.5 343.5L74.5 346L80 346.5L108.5 355L133 325.5V317.5L122 325.5L121 323V321L152 285.5V252L159 242.5V240L128 216H126L112.5 225.5L32.5 300.5L34.5 302.5L46 294.5L48.5 309.5L39.5 319.5V321L52 323L54 332Z",
+    path: "M54 291L43.5 302.5L74.5 305L80 305.5L108.5 314L133 284.5V276.5L122 284.5L121 282V280L152 244.5V211L159 201.5V199L128 175H126L112.5 184.5L32.5 259.5L34.5 261.5L46 253.5L48.5 268.5L39.5 278.5V280L52 282L54 291Z",
     name: "section3",
     tooltip: "Unit 3"
   },
   {
-    path: "M344 207.5L321 222.5V224L330.5 220L329 250.5L317 259L371.5 284L394 272L395.5 245.5L384.5 250.5V247.5L442 212.5L434.5 209.5V202.5L446 196L422.5 166L344 207.5Z",
+    path: "M344 166.5L321 181.5V183L330.5 179L329 209.5L317 218L371.5 243L394 231L395.5 204.5L384.5 209.5V206.5L442 171.5L434.5 168.5V161.5L446 155L422.5 125L344 166.5Z",
     name: "section4",
     tooltip: "Unit 8"
   },
   {
-    path: "M270 197V242.5L271 243.5L294 249.5L302 245.5L312.5 254.5L327.5 247.5L329 221.5L319.5 225.5V221.5L343 206.5L373.5 191V181.5L384 175L362 146.5L282 185L261 199.5L262.5 201L270 197Z",
+    path: "M270 156V201.5L271 202.5L294 208.5L302 204.5L312.5 213.5L327.5 206.5L329 180.5L319.5 184.5V180.5L343 165.5L373.5 150V140.5L384 134L362 105.5L282 144L261 158.5L262.5 160L270 156Z",
     name: "section5",
     tooltip: "Unit 7"
   },
   {
-    path: "M244.5 231L215 217.5V177L207.5 180.5L206 179L225 164L305.5 130L326 157L317 162V167L281 184L259.5 199.5L261.5 202.5L269 199.5L268 220.5L244.5 231Z",
+    path: "M244.5 190L215 176.5V136L207.5 139.5L206 138L225 123L305.5 89L326 116L317 121V126L281 143L259.5 158.5L261.5 161.5L269 158.5L268 179.5L244.5 190Z",
     name: "section6",
     tooltip: "Unit 6"
   },
   {
-    path: "M513.251 218.445L500.73 225.78L500.483 225.925V232.511L500.759 232.648L509.761 237.168L458.396 272.089L458.178 272.237V277.648L458.892 277.312L467.398 273.291V276.598L430.41 302.434L394.656 287.967L397.347 244.214L397.402 243.306L396.605 243.745L386.5 249.326V247.192L488.927 187.649L513.251 218.445Z",
+    path: "M513.251 177.445L500.73 184.78L500.483 184.925V191.511L500.759 191.648L509.761 196.168L458.396 231.089L458.178 231.237V236.648L458.892 236.312L467.398 232.291V235.598L430.41 261.434L394.656 246.967L397.347 203.214L397.402 202.306L396.605 202.745L386.5 208.326V206.192L488.927 146.649L513.251 177.445Z",
     name: "section7",
     tooltip: "Unit 9"
   },
   {
-    path: "M510 334L459 313.5H458.5L467 308.5L468.5 272L459 276V273.5L533 223.5L561 210.5L587 243L575 253.5V258L582 261L543 290.5V294.5L554.5 300L510 334Z",
+    path: "M510 293L459 272.5H458.5L467 267.5L468.5 231L459 235V232.5L533 182.5L561 169.5L587 202L575 212.5V217L582 220L543 249.5V253.5L554.5 259L510 293Z",
     name: "section8",
     tooltip: "Unit 10"
   },
   {
-    path: "M619.5 371.5L549.5 345V319L558.5 313V298L546 291L612 241.5H630L673.5 262L657.5 275V291L677.5 300.5L661.5 315.5V324L669 329L661.5 359.5L653 366L641 368.5L619.5 371.5Z",
+    path: "M619.5 330.5L549.5 304V278L558.5 272V257L546 250L612 200.5H630L673.5 221L657.5 234V250L677.5 259.5L661.5 274.5V283L669 288L661.5 318.5L653 325L641 327.5L619.5 330.5Z",
     name: "section9",
     tooltip: "Unit 11"
   },
 
   {
-    path: "M139 365.5L179 377.5L212 334V331L233.5 301.5V273.5L243 260.5L209.5 231.5L179 254.5L121.5 322L122.5 324L134 316L135 330L125.5 343.5L137.5 346L139 365.5Z",
+    path: "M139 324.5L179 336.5L212 293V290L233.5 260.5V232.5L243 219.5L209.5 190.5L179 213.5L121.5 281L122.5 283L134 275L135 289L125.5 302.5L137.5 305L139 324.5Z",
     name: "section9",
     tooltip: "Unit 2"
   },
   {
-    path: "M234 368V389L278 399L302.75 355.75L327.5 312.5V286.5L333.5 275L301.5 246L285.5 256.25L269.5 266.5L218.5 341.5L219.5 343L231 336V339L215 362L234 368Z",
+    path: "M234 327V348L278 358L302.75 314.75L327.5 271.5V245.5L333.5 234L301.5 205L285.5 215.25L269.5 225.5L218.5 300.5L219.5 302L231 295V298L215 321L234 327Z",
     name: "section9",
     tooltip: "Unit 1"
   }

@@ -60,11 +60,11 @@
                   </div>
                 </div>
                 <div class="investment__item-middle">
-                  <p class="investment__description">{{ unit.land_area_m2 }}m²</p>
+                  <p class="investment__description">{{ unit.land_area_m2 }}m² • Premium Location</p>
 
                 </div>
                 <div class="investment__item-bottom">
-                  <p class="investment__description">Premium Location</p>
+                  <!-- <p class="investment__description">Premium Location</p> -->
                   <!-- <UiButton class="investment__roi" variant="solid-yellow" shape="rounded" size="md">Annualised ROI:
                     10.6%
                   </UiButton> -->
@@ -389,6 +389,7 @@ const clearUnit = () => {
     padding: 0 vw(43);
     display: grid;
     grid-template-columns: 1fr 0.7fr;
+    // grid-template-columns: 1fr 1fr;
     gap: vw(36);
 
     @include mobile {
@@ -424,9 +425,14 @@ const clearUnit = () => {
   &__image-bedrooms {
     position: absolute;
     top: 0;
+    top: vw(-40);
     left: 0;
     width: 100%;
     height: 100%;
+
+    @include mobile {
+      top: vmin(-20);
+    }
 
     :deep(svg) {
       width: 100%;
@@ -436,7 +442,7 @@ const clearUnit = () => {
 
   &__image {
     width: 100%;
-    aspect-ratio: 694/587;
+    aspect-ratio: 694/423;
     object-fit: cover;
     border-radius: vw(15);
 
@@ -455,7 +461,6 @@ const clearUnit = () => {
 
   &__filters-group:first-child {
     margin-bottom: vw(15);
-    padding-bottom: vw(15);
 
     // border-bottom: vw(1) solid $yellow;
     @include mobile {
@@ -482,7 +487,7 @@ const clearUnit = () => {
     text-transform: uppercase;
     color: $yellow-dark;
     display: inline-block;
-    margin-bottom: vw(15);
+    margin-bottom: vw(5);
 
     @include mobile {
       max-width: 100%;
@@ -500,7 +505,7 @@ const clearUnit = () => {
     letter-spacing: 0px;
     color: $black-light;
     display: inline-block;
-    margin-bottom: vw(15);
+    margin-bottom: vw(10);
 
     @include mobile {
       font-size: vmin(12);
@@ -520,6 +525,7 @@ const clearUnit = () => {
   }
 
   &__button {
+    padding: vw(8) vw(28);
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
     font-size: vw(14);
@@ -535,11 +541,11 @@ const clearUnit = () => {
   }
 
   &__list {
-    margin-top: vw(25);
+    margin-top: vw(15);
     display: grid;
     gap: vw(10);
     overflow-y: auto;
-    max-height: vw(374);
+    max-height: vw(325);
     margin-right: vw(-15);
     padding-right: vw(15);
     transition: max-height 1s ease-in-out;
@@ -581,6 +587,7 @@ const clearUnit = () => {
   &__item-top {
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
 
   &__item-name {
@@ -612,6 +619,8 @@ const clearUnit = () => {
   }
 
   &__button-tag {
+    line-height: 1;
+    padding: vw(8) vw(15);
     color: $black-light;
 
     @include mobile {
@@ -625,8 +634,8 @@ const clearUnit = () => {
   &__tag {}
 
   &__item-middle {
-    margin-top: vw(25);
-    min-height: vw(75);
+    margin-top: vw(0);
+    min-height: vw(55);
 
     @include mobile {
       margin-top: vmin(10);
