@@ -10,7 +10,7 @@
         institutional-grade transparency.
       </p>
     </div>
-    <swiper-container class="my-swiper" :slides-per-view="3" :autoHeight="false" :space-between="spaceBetween"
+    <swiper-container class="my-swiper" :slides-per-view="4" :autoHeight="false" :space-between="spaceBetween"
       :breakpoints="{
         768: {
           slidesPerView: 3,
@@ -209,7 +209,7 @@ onMounted(() => {
     grid-template-rows: 38% 0.3fr 1.2fr;
 
     @include mobile {
-      grid-template-rows: 38% 2fr 1.2fr;
+      grid-template-rows: 28% 0.5fr 1.5fr;
       padding: vmin(28) vmin(22);
       border-radius: vmin(10);
       border: vmin(1) solid rgb($yellow, 0.6);

@@ -77,48 +77,48 @@ const centerMarker: IMarker = {
 
 const placesMock = [
   {
-    id: "International Hospital",
-    title: "International Hospital",
-    description: "World-class care with English-speaking doctors and 24/7 emergency support.",
+    id: "Bali Island school",
+    title: "Bali Island School",
+    description: "Premium education that attracts long-term family rentals.",
     position: { lat: -8.679353197943632, lng: 115.25703407690618 },
     type: [
-      { key: "BY CAR", time: '6 min' },
+      { key: "BY CAR", time: '3 min' },
     ],
     icon: iconSchool,
   },
   {
-    id: "24/7 Pharmacy",
-    title: "24/7 Pharmacy",
-    description: "Always-open access to medicines and essentials.",
+    id: "International Hospital",
+    title: "International Hospital",
+    description: "World-class healthcare boosting the area’s premium value.",
     position: { lat: -8.679130228085594, lng: 115.25919376552032 },
     type: [
-      { key: "BY CAR", time: '4 min' },
+      { key: "BY CAR", time: '6 min' },
     ],
     icon: iconPlus,
   },
   {
-    id: "Sanur Beach",
-    title: "Sanur Beach",
-    description: "Peaceful shoreline for morning walks and gentle exercise.",
+    id: "Icon Bali mall",
+    title: "Icon<br />Bali mall",
+    description: "A new lifestyle hub driving rental demand and desirability.",
     position: { lat: -8.706742303445766, lng: 115.2635888695486 },
     type: [
-      { key: "BY CAR", time: '4 min' },
+      { key: "BY CAR", time: '12 min' },
       { key: "FREE SHUTTLE", time: '7 min' },
     ],
     icon: iconBeach,
   },
   {
-    id: "Essential Services",
-    title: "Essential Services",
-    description: "Banks, groceries, and daily needs are within walking distance.",
+    id: "Sanur Beach",
+    title: "Sanur Beach",
+    description: "Safe, family-friendly beach fueling strong tourist rentals.",
     type: [
-      { key: "BY CAR", time: '3 min' },
+      { key: "BY CAR", time: '4 min' },
     ],
   },
   {
-    id: "Medical & Wellness Map",
-    title: "Medical & Wellness Map",
-    description: "Interactive guide to nearby hospitals, clinics, quiet zones, and wellness facilities.",
+    id: "Local Markets & Dining",
+    title: "Local Markets & Dining",
+    description: "Authentic food and family-friendly dining.",
     type: [
       { key: "BY CAR", time: '5 min' },
     ],

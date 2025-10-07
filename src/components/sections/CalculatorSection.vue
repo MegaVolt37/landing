@@ -15,12 +15,12 @@
           Calculate your detailed returns including taxes, management fees, and seasonal
           variations. Real-time analysis based on current market conditions.
         </p> -->
-        <!-- <div class="calculator__filter">
+        <div class="calculator__filter">
           <UiButton class="calculator__button-flt" variant="outline-yellow" shape="rounded" size="md"
             @click="toggleFilters">
             filter Analysis Results
           </UiButton>
-        </div> -->
+        </div>
         <Transition name="slide-left">
           <div class="calculator__fields" v-if="!isHiddenFilters">
             <span class="calculator__fields-title">filter</span>
