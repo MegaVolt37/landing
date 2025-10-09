@@ -29,7 +29,7 @@
                 <template #content>
                   <div class="delivery__item-content">
                     <span class="delivery__item-title">Professional Rental Management</span>
-                    <p class="delivery__item-text" v-prevent-widow>
+                    <p class="delivery__item-text">
                       Our in-house team handles guest bookings, property care, and marketing. We ensure stable,
                       optimized
                       returns with zero operational burden.
@@ -45,10 +45,9 @@
                 <template #content>
                   <div class="delivery__item-content">
                     <span class="delivery__item-title">Established Location Advantages</span>
-                    <p class="delivery__item-text" v-prevent-widow>
+                    <p class="delivery__item-text">
                       Sanur delivers consistent, predictable returns, supported by steady tourist demand and major
-                      ongoing
-                      infrastructure investments.
+                      ongoing infrastructure investments.
                     </p>
                   </div>
                 </template>
@@ -61,7 +60,7 @@
                 <template #content>
                   <div class="delivery__item-content">
                     <span class="delivery__item-title">Complete<br />Legal<br />Compliance</span>
-                    <p class="delivery__item-text" v-prevent-widow>
+                    <p class="delivery__item-text">
                       All villas come with full legal documentation, clear titles, and direct purchase from
                       the developer.
                     </p>
@@ -76,7 +75,7 @@
                 <template #content>
                   <div class="delivery__item-content">
                     <span class="delivery__item-title">Complete<br />Legal<br />Compliance</span>
-                    <p class="delivery__item-text" v-prevent-widow>
+                    <p class="delivery__item-text">
                       Institutional-level documentation, government permits, and transparent legal structure. Full due
                       diligence support provided.
                     </p>

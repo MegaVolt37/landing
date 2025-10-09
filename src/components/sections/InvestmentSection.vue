@@ -13,7 +13,8 @@
             <h5 class="investment__title">Select Your<br />Investment Unit</h5>
             <div class="investment__image-wrapper">
               <AppBedrooms class="investment__image-bedrooms" :units="unitData" :selectedUnit="selectedUnit"
-                :selectedCurrency="selectedCurrency" :clearUnit="clearUnit" />
+                :selectedCurrency="selectedCurrency" :clearUnit="clearUnit"
+                :getCurrentPriceField="getCurrentPriceField" />
               <img class="investment__image" src="@/assets/images/investment.png" alt="">
             </div>
           </div>
@@ -35,6 +36,16 @@
               </div>
 
               <div class="investment__filters-group">
+                <p class="investment__filters-subtitle">Choose phase:</p>
+                <div class="investment__filters-buttons">
+                  <UiButton v-for="(value, idx) in phases" :key="idx" class="investment__button" variant="outline-brown"
+                    size="lg" shape="rounded" @click="changePhase(value.id)"
+                    :class="{ 'active': selectedPhase === value.id }">{{ value.name }}
+                  </UiButton>
+                </div>
+              </div>
+
+              <div class="investment__filters-group">
                 <span class="investment__filters-subtitle">Choose Type of Villa:</span>
                 <div class="investment__filters-buttons">
                   <UiButton class="investment__button"
@@ -51,16 +62,16 @@
               <div class="investment__item" v-for="(unit, idx) in filteredUnits" :key="idx" @click="selectUnit(unit)">
                 <div class="investment__item-top">
                   <span class="investment__item-name">{{ unit.id }} - {{ getUnitBr(unit) }}</span>
-                  <div class="investment__item-tags">
-                    <!-- <UiButton class="investment__button investment__button-tag" variant="outline-dark-yellow"
+                  <!-- <div class="investment__item-tags">
+                    <UiButton class="investment__button investment__button-tag" variant="outline-dark-yellow"
                       shape="rounded" size="md">Phase 2
-                    </UiButton> -->
+                    </UiButton>
                     <UiButton class="investment__button investment__button-tag" variant="outline-dark-yellow"
                       shape="rounded" size="md">{{ getUnitTypology(unit) }}</UiButton>
-                  </div>
+                  </div> -->
                 </div>
                 <div class="investment__item-middle">
-                  <p class="investment__description">{{ unit.land_area_m2 }}m² • Premium Location</p>
+                  <p class="investment__description">{{ unit.land_area_m2 }}m²</p>
 
                 </div>
                 <div class="investment__item-bottom">
@@ -68,7 +79,7 @@
                   <!-- <UiButton class="investment__roi" variant="solid-yellow" shape="rounded" size="md">Annualised ROI:
                     10.6%
                   </UiButton> -->
-                  <span class="investment__price">{{ formatCurrency(unit) }}</span>
+                  <span class="investment__price">{{ getCurrentPriceField(unit) }}</span>
                 </div>
               </div>
             </div>
@@ -95,7 +106,9 @@ import IconArrowDown from '../icons/IconArrowDown.vue';
 import UiButton from '../ui/uiButton.vue';
 import AppBedrooms from '../AppBedrooms.vue';
 
+const course = GoogleSheetsService.course
 const unitData = GoogleSheetsService.unitsData
+const unitPricesData = GoogleSheetsService.unitsPricesData
 
 const typology = [
   {
@@ -119,10 +132,32 @@ const currency = [
   }
 ]
 
+const phases = computed(() => [
+  {
+    id: '1',
+    name: 'Phase 1',
+    price: 'price_1_idr',
+    array: unitPricesData
+  },
+  {
+    id: '2',
+    name: 'Phase 2',
+    price: 'price_2_idr',
+    array: unitPricesData
+  },
+  {
+    id: '3',
+    name: 'Phase 3',
+    price: 'price_idr',
+    array: unitData
+  }
+])
+
 const isMore = ref(false)
 const selectedBr = ref(null)
 const selectedFinish = ref(null)
 const selectedCurrency = ref('idr')
+const selectedPhase = ref('3')
 const selectedUnit = ref(null)
 
 const filteredUnits = computed(() => {
@@ -181,6 +216,32 @@ const getUnitBr = (unit) => {
   return unitBr
 }
 
+
+function formatToUsd(value) {
+  const numericValue = parseFloat(course.value.replace(',', ''));
+  const result = value / numericValue;
+
+  return formatCurrency(result);
+}
+const getCurrentPriceField = (unit) => {
+  const field = phases.value.find(p => p.id === selectedPhase.value);
+  const obj = field.array.value.find((u) => u.id === unit.id)
+
+  const amount = obj[field.price] == null ? 0 : Number(obj[field.price])
+  if (Number.isNaN(amount)) return '—'
+
+  if (selectedCurrency.value === 'usd') {
+    return formatToUsd(amount)
+  } else {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount)
+  }
+}
+
 const getUnitTypology = (unit) => {
   const unitBr = unit.typology.split(' ')[1]
   if (!unitBr) return 'balanced'
@@ -188,17 +249,7 @@ const getUnitTypology = (unit) => {
   return unitBr
 }
 
-const formatCurrency = (price) => {
-  const value = selectedCurrency.value === 'usd' ? price.price_usd : price.price_idr
-  // return selectedCurrency.value === 'usd'
-  //   ? formatToUsd(priceIdr)
-  //   : formatCurrency(priceIdr)
-  // return new Intl.NumberFormat('en-US', {
-  //   style: 'currency',
-  //   currency: 'USD',
-  //   minimumFractionDigits: 0,
-  //   maximumFractionDigits: 0
-  // }).format(amount)
+function formatCurrency(value) {
 
   const amount = value == null ? 0 : Number(value)
   if (Number.isNaN(amount)) return '—'
@@ -244,8 +295,11 @@ const changeCurrency = (currency) => {
   selectedCurrency.value = currency
 }
 
+const changePhase = (phase) => {
+  selectedPhase.value = phase
+}
+
 const selectUnit = (unit) => {
-  console.log(unit)
   selectedUnit.value = unit.id
 }
 
@@ -457,16 +511,24 @@ const clearUnit = () => {
     // padding: vw(15);
   }
 
-  &__filters {}
-
-  &__filters-group:first-child {
-    margin-bottom: vw(15);
+  &__filters {
+    display: grid;
+    gap: vw(15);
 
     // border-bottom: vw(1) solid $yellow;
     @include mobile {
-      margin-bottom: vmin(15);
+      gap: 0;
     }
   }
+
+  // &__filters-group:first-child {
+  //   margin-bottom: vw(15);
+
+  //   // border-bottom: vw(1) solid $yellow;
+  //   @include mobile {
+  //     margin-bottom: vmin(15);
+  //   }
+  // }
 
   &__filters-group {
     display: grid;
@@ -525,7 +587,6 @@ const clearUnit = () => {
   }
 
   &__button {
-    padding: vw(8) vw(28);
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
     font-size: vw(14);
@@ -533,6 +594,10 @@ const clearUnit = () => {
     letter-spacing: 0%;
     text-align: center;
     text-transform: uppercase;
+
+    @include desktop {
+      padding: vw(8) vw(28);
+    }
 
     @include mobile {
       font-size: vmin(10);
@@ -620,8 +685,11 @@ const clearUnit = () => {
 
   &__button-tag {
     line-height: 1;
-    padding: vw(8) vw(15);
     color: $black-light;
+
+    @include desktop {
+      padding: vw(8) vw(15);
+    }
 
     @include mobile {
       text-transform: capitalize;
@@ -645,7 +713,7 @@ const clearUnit = () => {
 
   &__description {
     font-family: 'Plus Jakarta Sans';
-    font-weight: 400;
+    font-weight: 300;
     font-size: vw(17);
     line-height: vw(22);
     letter-spacing: 0px;

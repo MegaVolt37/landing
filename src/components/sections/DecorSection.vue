@@ -1,6 +1,6 @@
 <template>
   <section class="decor">
-    <img src="@/assets/images/decor.png" alt="decor">
+    <img src="@/assets/images/decor.webp" alt="decor">
   </section>
 </template>
 
@@ -10,6 +10,7 @@
 
 <style scoped lang="scss">
 .decor {
+  background-color: $gray-light;
   width: 100%;
   aspect-ratio: 16/7;
 

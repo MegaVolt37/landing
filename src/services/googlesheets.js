@@ -10,7 +10,14 @@ class GoogleSheetsService {
     monthlyStrategy: 'E68:Z79',
     rentalRate: 'E43:I47',
     course: 'E11:G11',
-    selectedPrice: 'G27'
+    selectedPrice: 'G27',
+
+    dailyStrategyPhase3: 'E53:Z64',
+    monthlyStrategyPhase3: 'E68:Z79',
+    dailyStrategyPhase2: 'E84:Z95',
+    monthlyStrategyPhase2: 'E99:Z110',
+    dailyStrategyPhase1: 'E84:Z95',
+    monthlyStrategyPhase1: 'E131:Z142',
   }
 
   units = ref([])
@@ -22,10 +29,15 @@ class GoogleSheetsService {
   rentalRate = ref([])
   course = ref([])
   selectedPrice = ref([])
-
+  monthlyStrategyPhase3 = ref([])
+  dailyStrategyPhase3 = ref([])
+  monthlyStrategyPhase2 = ref([])
+  dailyStrategyPhase2 = ref([])
+  monthlyStrategyPhase1 = ref([])
+  dailyStrategyPhase1 = ref([])
 
   constructor() {
-    this.spreadsheetId = '1bN9iBmrNt5LLD_Hud_uIh7XQNgDGYizbNEpetr40L3U';
+    this.spreadsheetId = '1dnLv8GbIPw30XCGyNRe85wKM2Xq8qPhdjPdMrpv1YRI';
     this.apiKey = import.meta.env.VITE_VUE_APP_GOOGLE_SHEETS_API_KEY;
     this.baseUrl = 'https://sheets.googleapis.com/v4/spreadsheets';
     this.cache = new Map();
@@ -348,6 +360,43 @@ class GoogleSheetsService {
       const unitsMap = await this.fetchData(this.staticTable.selectedPrice);
       this.selectedPrice = Number(unitsMap.flat().join(""))
       return this.selectedPrice
+  }
+
+  async getDataMonthlyStrategyPhase3() {
+      const unitsMap = await this.fetchData(this.staticTable.monthlyStrategyPhase3);
+      this.monthlyStrategyPhase3.value = this.transformMonthlyStrategy(unitsMap)
+      return this.monthlyStrategyPhase3.value
+  }
+
+  async getDataDailyStrategyPhase3() {
+      const unitsMap = await this.fetchData(this.staticTable.dailyStrategyPhase3);
+      this.dailyStrategyPhase3.value = this.transformMonthlyStrategy(unitsMap)
+      return this.dailyStrategyPhase3.value
+  }
+
+  async getDataMonthlyStrategyPhase2() {
+      const unitsMap = await this.fetchData(this.staticTable.monthlyStrategyPhase2);
+      this.monthlyStrategyPhase2.value = this.transformMonthlyStrategy(unitsMap)
+      return this.monthlyStrategyPhase2.value
+  }
+
+  async getDataDailyStrategyPhase2() {
+      const unitsMap = await this.fetchData(this.staticTable.dailyStrategyPhase2);
+      console.log(unitsMap,this.staticTable.dailyStrategyPhase2)
+      this.dailyStrategyPhase2.value = this.transformMonthlyStrategy(unitsMap)
+      return this.dailyStrategyPhase2.value
+  }
+
+  async getDataMonthlyStrategyPhase1() {
+      const unitsMap = await this.fetchData(this.staticTable.monthlyStrategyPhase1);
+      this.monthlyStrategyPhase1.value = this.transformMonthlyStrategy(unitsMap)
+      return this.monthlyStrategyPhase1.value
+  }
+
+  async getDataDailyStrategyPhase1() {
+      const unitsMap = await this.fetchData(this.staticTable.dailyStrategyPhase1);
+      this.dailyStrategyPhase1.value = this.transformMonthlyStrategy(unitsMap)
+      return this.dailyStrategyPhase1.value
   }
 
   // --- Simple in-memory cache helpers ---

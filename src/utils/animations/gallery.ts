@@ -32,12 +32,12 @@ export function animateGallery(gsap: GSAP): GSAPTimeline | null {
 
     scrollTrigger: {
       trigger: ".gallery",
-      start: "top+=90px bottom",
+      start: "top center",
       scrub: 1,
       // scrub: false,
       // scrub: true,
 
-      end: "bottom"
+      end: "bottom center",
       // pin: true,
     },
   });
@@ -59,12 +59,12 @@ export function animateGallery(gsap: GSAP): GSAPTimeline | null {
     {
       scrollTrigger: {
         trigger: ".gallery",
-        start: "top+=90px bottom",
+        start: "top center",
         scrub: 1,
         // scrub: false,
         // scrub: true,
 
-        end: "bottom",
+        end: "bottom center",
         // pin: true,
       },
       x: `${percentOffset}%`,

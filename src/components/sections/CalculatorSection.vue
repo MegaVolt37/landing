@@ -107,7 +107,7 @@
             Investment Parameters: Analysis based on {{ currentDataUnit?.occupancy }} % occupancy
             rate, {{ currentDataUnit?.marketing_fee_perc }}% marketing fee, {{
               currentDataUnit?.management_company_charge_perc }}% management fee.
-            Net monthly proceedings: IDR {{ formatIdr(currentDataUnit?.net_revenue_idr) }}.
+            Net monthly proceedings:  {{ montlyRevenue }}.
             Calculations reflect current market conditions and selected rental strategy.
           </p>
         </div>
@@ -185,10 +185,25 @@ const selectedCurrency = ref('idr')
 
 const course = GoogleSheetsService.course
 const units = GoogleSheetsService.units
-const dailyStrategy = GoogleSheetsService.dailyStrategy
-const monthlyStrategy = GoogleSheetsService.monthlyStrategy
+// const dailyStrategy = GoogleSheetsService.dailyStrategy
+// const monthlyStrategy = GoogleSheetsService.monthlyStrategy
 const unitPricesData = GoogleSheetsService.unitsPricesData
 const unitData = GoogleSheetsService.unitsData
+
+const dailyStrategyPhase3 = GoogleSheetsService.dailyStrategyPhase3
+const monthlyStrategyPhase3 = GoogleSheetsService.monthlyStrategyPhase3
+const dailyStrategyPhase2 = GoogleSheetsService.dailyStrategyPhase2
+const monthlyStrategyPhase2 = GoogleSheetsService.monthlyStrategyPhase2
+const dailyStrategyPhase1 = GoogleSheetsService.dailyStrategyPhase1
+const monthlyStrategyPhase1 = GoogleSheetsService.monthlyStrategyPhase1
+
+const phaseStrategies = computed(() => {
+  return {
+    '1': { daily: dailyStrategyPhase1, monthly: monthlyStrategyPhase1 },
+    '2': { daily: dailyStrategyPhase2, monthly: monthlyStrategyPhase2 },
+    '3': { daily: dailyStrategyPhase3, monthly: monthlyStrategyPhase3 }
+  }
+});
 
 // Data from Google Sheets
 // const availableUnits = ref([])
@@ -210,7 +225,9 @@ const strategyOptions = [
 // --- COMPUTED ---
 
 const selectedDataMonthlyDaily = computed(() => {
-  return selectedStrategy.value === 'daily' ? dailyStrategy.value : monthlyStrategy.value
+  const strategy = phaseStrategies.value[selectedPhase.value]?.[selectedStrategy.value];
+  return strategy ? strategy.value : [];
+  // return selectedStrategy.value === 'daily' ? dailyStrategy.value : monthlyStrategy.value
 })
 
 const currentDataUnit = computed(() => {
@@ -244,6 +261,12 @@ const purchasePrice = computed(() => {
   }
 })
 
+const montlyRevenue = computed(() => {
+  return selectedCurrency.value === 'usd'
+    ? formatToUsd(currentDataUnit.value?.monthly_revenue_idr)
+    : formatCurrency(currentDataUnit.value?.monthly_revenue_idr)
+})
+
 // --- METHODS ---
 function toggleFilters() {
   isHiddenFilters.value = !isHiddenFilters.value
@@ -256,12 +279,18 @@ async function loadInitialData() {
     await GoogleSheetsService.getUnits()
     await GoogleSheetsService.getDataUnits()
     await GoogleSheetsService.getDataPriceUnits()
-    await GoogleSheetsService.getDataDailyStrategy()
-    await GoogleSheetsService.getDataMonthlyStrategy()
-    await GoogleSheetsService.getDataRentalRate()
+    // await GoogleSheetsService.getDataDailyStrategy()
+    // await GoogleSheetsService.getDataMonthlyStrategy()
+    // await GoogleSheetsService.getDataRentalRate()
     await GoogleSheetsService.getDataRentalRate()
     await GoogleSheetsService.getDataCourse()
     await GoogleSheetsService.getSelectedPrice()
+    await GoogleSheetsService.getDataMonthlyStrategyPhase3()
+    await GoogleSheetsService.getDataDailyStrategyPhase3()
+    await GoogleSheetsService.getDataMonthlyStrategyPhase2()
+    await GoogleSheetsService.getDataDailyStrategyPhase2()
+    await GoogleSheetsService.getDataMonthlyStrategyPhase1()
+    await GoogleSheetsService.getDataDailyStrategyPhase1()
 
     loading.value = false
   } catch (err) {
@@ -485,7 +514,7 @@ onMounted(async () => {
       text-align: center;
       text-transform: uppercase;
       color: $white;
-      padding: vmin(5) vmin(20);
+      padding: vmin(8) vmin(20);
       margin-bottom: vmin(20);
     }
   }
@@ -583,7 +612,7 @@ onMounted(async () => {
     // margin-top: vw(-25);
     // margin-bottom: vw(25);
     font-family: 'Plus Jakarta Sans';
-    font-weight: 400;
+    font-weight: 300;
     font-size: vw(16);
     line-height: vw(22);
     letter-spacing: 0px;
@@ -856,7 +885,7 @@ onMounted(async () => {
 
   &__chart-desc {
     font-family: 'Plus Jakarta Sans';
-    font-weight: 400;
+    font-weight: 300;
     font-size: vw(12);
     line-height: vw(18);
     letter-spacing: 0px;

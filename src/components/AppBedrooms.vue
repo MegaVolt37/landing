@@ -35,11 +35,11 @@
           <p class="investment__description">{{ selectedUnit.land_area_m2 }}m²</p>
         </div>
         <div class="investment__item-bottom">
-          <p class="investment__description">Premium Location</p>
+          <!-- <p class="investment__description">Premium Location</p> -->
           <!-- <UiButton class="investment__roi" variant="solid-yellow" shape="rounded" size="md">Annualised ROI:
             10.6%
           </UiButton> -->
-          <span class="investment__price">{{ formatCurrency(selectedUnit) }}</span>
+          <span class="investment__price">{{ getCurrentPriceField(selectedUnit) }}</span>
         </div>
       </div>
     </div>
@@ -84,6 +84,7 @@ interface IProps {
   selectedUnit: string | null
   selectedCurrency: string
   clearUnit: () => void
+  getCurrentPriceField: (value: Unit) => string
 }
 
 const props = defineProps<IProps>()
@@ -294,11 +295,10 @@ const hideHoverTooltip = () => {
 const selectDefault = () => {
   sections.forEach((section, index) => {
     if (section.tooltip === props.selectedUnit) {
-      console.log(index)
       selectedSection.value = index
       hoveredSection.value = index
       currentTooltip.value = props.selectedUnit
-      console.log(props.selectedUnit, currentTooltip.value)
+
       nextTick(() => updateTooltipPosition(index))
       // showHoverTooltip(index)
     }
