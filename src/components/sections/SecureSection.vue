@@ -10,7 +10,7 @@
           locations. Our
           expert team is here to guide you every step of the way.</p>
         <UiButton class="secure__button" variant="solid-yellow" size="md" shape="rounded" @click="$emit('openForm')">
-          Explore VERDANA Experience </UiButton>
+          Explore VERDANA residences </UiButton>
       </div>
     </div>
     <div class="slider">
@@ -276,9 +276,13 @@ register();
   &__item-content {
     width: 100%;
     aspect-ratio: 1;
-    padding: vw(85) vw(50) vw(50) vw(60);
+    padding: vw(65) vw(50) vw(50) vw(60);
+    // padding: vw(50) vw(50) vw(50) vw(60);
     display: flex;
     flex-direction: column;
+
+    // display: grid;
+    // grid-template-rows: auto 0fr;
 
     @include mobile {
       padding: vmin(45) vmin(33) vmin(43) vmin(45);
@@ -297,7 +301,7 @@ register();
     color: $yellow-light;
     margin-bottom: vw(20);
     display: inline-block;
-    min-height: vw(55);
+    min-height: vw(80);
     display: grid;
     align-items: flex-end;
 

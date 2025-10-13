@@ -442,7 +442,7 @@ onMounted(async () => {
 
 .calculator {
   position: relative;
-  padding: vw(65) vw(43) vw(90);
+  padding: vw(65) vw(43) vw(50);
 
   @include mobile {
     padding: vmin(40) vmin(10);

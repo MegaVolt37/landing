@@ -81,6 +81,7 @@ const toggleMenu = () => {
   @include mobile {
     padding: vmin(20) vmin(10) 0 vmin(10);
     height: 100svh;
+    height: auto;
     position: relative;
   }
 
@@ -102,6 +103,7 @@ const toggleMenu = () => {
       // height: calc(100svh - 12% - 26vmin);
       // height: calc(100svh - 12%);
       height: 100svh;
+      height: auto;
     }
   }
 
@@ -120,18 +122,19 @@ const toggleMenu = () => {
     @include mobile {
       // padding-bottom: 90svh;
       padding-bottom: calc(100svh - 64%);
+      padding-bottom: 128%;
     }
 
-    &:before {
-      content: "";
-      position: absolute;
-      z-index: 2;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgb(#000, 0.6);
-    }
+    // &:before {
+    //   content: "";
+    //   position: absolute;
+    //   z-index: 2;
+    //   left: 0;
+    //   top: 0;
+    //   width: 100%;
+    //   height: 100%;
+    //   background-color: rgb(#000, 0.6);
+    // }
   }
 }
 
@@ -270,6 +273,7 @@ const toggleMenu = () => {
     right: 0;
     position: relative;
     margin-bottom: vmin(16);
+    margin-top: 74%;
   }
 
   &__content {
