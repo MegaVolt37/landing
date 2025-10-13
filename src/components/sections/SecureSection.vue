@@ -10,7 +10,7 @@
           locations. Our
           expert team is here to guide you every step of the way.</p>
         <UiButton class="secure__button" variant="solid-yellow" size="md" shape="rounded" @click="$emit('openForm')">
-          Explore Complete VERDANA Experience </UiButton>
+          Explore VERDANA Experience </UiButton>
       </div>
     </div>
     <div class="slider">
