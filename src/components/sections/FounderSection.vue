@@ -355,7 +355,7 @@ const currentAuthor = computed(() =>
       font-size: vmin(32);
       line-height: vmin(52);
       margin-top: vmin(-31);
-      margin-right: vmin(-56);
+      margin-right: vmin(-10);
     }
   }
 
