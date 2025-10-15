@@ -570,18 +570,18 @@ onMounted(() => {
   /* Центрируем тултип относительно точки */
 }
 
-.tooltip::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 0;
-  border: 6px solid transparent;
-  border-top-color: white;
-  bottom: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
-}
+// .tooltip::after {
+//   content: '';
+//   position: absolute;
+//   width: 0;
+//   height: 0;
+//   border: 6px solid transparent;
+//   border-top-color: white;
+//   bottom: -12px;
+//   left: 50%;
+//   transform: translateX(-50%);
+//   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+// }
 
 @keyframes fadeIn {
   from {
