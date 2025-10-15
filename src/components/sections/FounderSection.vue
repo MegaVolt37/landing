@@ -185,7 +185,7 @@ const currentAuthor = computed(() =>
 
     @include mobile {
       font-weight: 400;
-      font-size: vmin(30);
+      font-size: vmin(21);
     }
   }
 
