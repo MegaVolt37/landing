@@ -16,6 +16,7 @@
                 :selectedCurrency="selectedCurrency" :clearUnit="clearUnit"
                 :getCurrentPriceField="getCurrentPriceField" />
               <img class="investment__image" src="@/assets/images/investment.png" alt="">
+              <!-- <img class="investment__image" src="@/assets/images/home.webp" alt=""> -->
             </div>
           </div>
 
@@ -62,16 +63,15 @@
               <div class="investment__item" v-for="(unit, idx) in filteredUnits" :key="idx" @click="selectUnit(unit)">
                 <div class="investment__item-top">
                   <span class="investment__item-name">{{ unit.id }} - {{ getUnitBr(unit) }}</span>
-                  <!-- <div class="investment__item-tags">
+                  <div class="investment__item-tags">
                     <UiButton class="investment__button investment__button-tag" variant="outline-dark-yellow"
-                      shape="rounded" size="md">Phase 2
-                    </UiButton>
-                    <UiButton class="investment__button investment__button-tag" variant="outline-dark-yellow"
-                      shape="rounded" size="md">{{ getUnitTypology(unit) }}</UiButton>
-                  </div> -->
+                      shape="rounded" size="md">{{ unit.land_area_m2 }} m²</UiButton>
+                    <!-- <UiButton class="investment__button investment__button-tag" variant="outline-dark-yellow"
+                      shape="rounded" size="md">{{ getUnitTypology(unit) }}</UiButton> -->
+                  </div>
                 </div>
                 <div class="investment__item-middle">
-                  <p class="investment__description">{{ unit.land_area_m2 }}m²</p>
+                  <!-- <p class="investment__description">{{ unit.land_area_m2 }}m²</p> -->
 
                 </div>
                 <div class="investment__item-bottom">
@@ -452,7 +452,9 @@ const clearUnit = () => {
     }
   }
 
-  &__aside {}
+  &__aside {
+    display: grid;
+  }
 
   &__title {
     margin-bottom: vw(30);
@@ -474,12 +476,18 @@ const clearUnit = () => {
   &__image-wrapper {
     overflow: hidden;
     position: relative;
+    height: 100%;
+
+    @include desktop {
+      max-height: vw(450);
+    }
   }
 
   &__image-bedrooms {
     position: absolute;
     top: 0;
     top: vw(-40);
+    // top: vw(-15);
     left: 0;
     width: 100%;
     height: 100%;
@@ -496,12 +504,13 @@ const clearUnit = () => {
 
   &__image {
     width: 100%;
-    aspect-ratio: 694/423;
+    // aspect-ratio: 679/415;
+    height: 100%;
     object-fit: cover;
     border-radius: vw(15);
 
     @include mobile {
-      aspect-ratio: 319/266;
+      // aspect-ratio: 319/266;
       border-radius: vmin(10);
     }
   }
@@ -513,7 +522,7 @@ const clearUnit = () => {
 
   &__filters {
     display: grid;
-    gap: vw(15);
+    gap: vw(10);
 
     // border-bottom: vw(1) solid $yellow;
     @include mobile {
@@ -562,12 +571,12 @@ const clearUnit = () => {
   &__filters-subtitle {
     font-family: 'Plus Jakarta Sans';
     font-weight: 400;
-    font-size: vw(17);
-    line-height: vw(22);
+    font-size: vw(14);
+    line-height: 1.3;
     letter-spacing: 0px;
     color: $black-light;
     display: inline-block;
-    margin-bottom: vw(10);
+    margin-bottom: vw(5);
 
     @include mobile {
       font-size: vmin(12);
@@ -611,6 +620,7 @@ const clearUnit = () => {
     gap: vw(10);
     overflow-y: auto;
     max-height: vw(325);
+    max-height: vw(280);
     margin-right: vw(-15);
     padding-right: vw(15);
     transition: max-height 1s ease-in-out;
@@ -686,13 +696,14 @@ const clearUnit = () => {
   &__button-tag {
     line-height: 1;
     color: $black-light;
+    text-transform: lowercase;
 
     @include desktop {
-      padding: vw(8) vw(15);
+      padding: vw(6) vw(15);
     }
 
     @include mobile {
-      text-transform: capitalize;
+      text-transform: lowercase;
       letter-spacing: 0%;
       font-size: vmin(8);
       line-height: vmin(10);
@@ -703,11 +714,11 @@ const clearUnit = () => {
 
   &__item-middle {
     margin-top: vw(0);
-    min-height: vw(55);
+    min-height: vw(30);
 
     @include mobile {
       margin-top: vmin(10);
-      min-height: vmin(50);
+      min-height: vmin(20);
     }
   }
 
