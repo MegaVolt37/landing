@@ -8,8 +8,7 @@
           <p class="form__title">Fill the form below and we'll contact you as soon as possible</p>
           <form class="form__form">
             <el-input class="form__field" v-model="name" v-bind="nameAttrs" placeholder="Contact Person" />
-            <el-input class="form__field" v-model="phone" placeholder="+62 81 245 555 555"
-              v-mask="'+## ### #### ####'" />
+            <el-input class="form__field" v-model="phone" placeholder="Contact number" v-mask="'+## ### #### ####'" />
             <el-checkbox class="form__checkbox" label="" v-model="checked">
               <span>By clicking the button, you
                 agree to <a href="https://labnacapital.com/privacy-policy" target="_blank"
