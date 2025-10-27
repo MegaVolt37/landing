@@ -1,7 +1,7 @@
 <template>
   <div class="main-section">
     <div class="main-section_content">
-      <!-- <div class="main-section__background"></div> -->
+      <div class="main-section__background"></div>
       <header class="header">
         <div class="header__burger" @click="toggleMenu">
           <span class="header__burger-line"></span>
