@@ -188,7 +188,9 @@ const units = GoogleSheetsService.units
 // const dailyStrategy = GoogleSheetsService.dailyStrategy
 // const monthlyStrategy = GoogleSheetsService.monthlyStrategy
 const unitPricesData = GoogleSheetsService.unitsPricesData
+const unitPricesDataPremium = GoogleSheetsService.unitsPricesDataPremium
 const unitData = GoogleSheetsService.unitsData
+const unitDataPremium = GoogleSheetsService.unitsDataPremium
 
 const dailyStrategyPhase3 = GoogleSheetsService.dailyStrategyPhase3
 const monthlyStrategyPhase3 = GoogleSheetsService.monthlyStrategyPhase3
@@ -197,7 +199,22 @@ const monthlyStrategyPhase2 = GoogleSheetsService.monthlyStrategyPhase2
 const dailyStrategyPhase1 = GoogleSheetsService.dailyStrategyPhase1
 const monthlyStrategyPhase1 = GoogleSheetsService.monthlyStrategyPhase1
 
+const dailyStrategyPhase3Premium = GoogleSheetsService.dailyStrategyPhase3Premium
+const monthlyStrategyPhase3Premium = GoogleSheetsService.monthlyStrategyPhase3Premium
+const dailyStrategyPhase2Premium = GoogleSheetsService.dailyStrategyPhase2Premium
+const monthlyStrategyPhase2Premium = GoogleSheetsService.monthlyStrategyPhase2Premium
+const dailyStrategyPhase1Premium = GoogleSheetsService.dailyStrategyPhase1Premium
+const monthlyStrategyPhase1Premium = GoogleSheetsService.monthlyStrategyPhase1Premium
+
 const phaseStrategies = computed(() => {
+  if (selectedFinish.value === 'premium') {
+    return {
+      '1': { daily: dailyStrategyPhase1Premium, monthly: monthlyStrategyPhase1Premium },
+      '2': { daily: dailyStrategyPhase2Premium, monthly: monthlyStrategyPhase2Premium },
+      '3': { daily: dailyStrategyPhase3Premium, monthly: monthlyStrategyPhase3Premium }
+    }
+  }
+  console.log(selectedFinish.value)
   return {
     '1': { daily: dailyStrategyPhase1, monthly: monthlyStrategyPhase1 },
     '2': { daily: dailyStrategyPhase2, monthly: monthlyStrategyPhase2 },
@@ -226,6 +243,7 @@ const strategyOptions = [
 
 const selectedDataMonthlyDaily = computed(() => {
   const strategy = phaseStrategies.value[selectedPhase.value]?.[selectedStrategy.value];
+  console.log(strategy, selectedPhase.value, selectedStrategy.value, phaseStrategies.value)
   return strategy ? strategy.value : [];
   // return selectedStrategy.value === 'daily' ? dailyStrategy.value : monthlyStrategy.value
 })
@@ -238,7 +256,8 @@ const purchasePrice = computed(() => {
   // if (!roiData.value && !currentUnit.value) return 0
   if (selectedPhase.value === '1' || selectedPhase.value === '2') {
     let priceIdr = 0
-    const unit = unitPricesData.value && unitPricesData.value.find(unit => unit.id === selectedUnit.value)
+    const unitPriceData = selectedFinish.value === 'premium' ? unitPricesDataPremium.value : unitPricesData.value
+    const unit = unitPriceData && unitPriceData.find(unit => unit.id === selectedUnit.value)
     if (unit) {
       if (selectedPhase.value === '1') {
         priceIdr = unit.price_1_idr
@@ -250,7 +269,8 @@ const purchasePrice = computed(() => {
       ? formatToUsd(priceIdr)
       : formatCurrency(priceIdr)
   } else {
-    let priceIdr = unitData.value && unitData.value.find(unit => unit.id === selectedUnit.value)?.price_idr
+    const dataUnit = selectedFinish.value === 'premium' ? unitDataPremium.value : unitData.value
+    let priceIdr = dataUnit && dataUnit.find(unit => unit.id === selectedUnit.value)?.price_idr
 
 
     priceIdr = increaseFinishingPrice(priceIdr)
@@ -278,7 +298,9 @@ async function loadInitialData() {
     error.value = null
     await GoogleSheetsService.getUnits()
     await GoogleSheetsService.getDataUnits()
+    await GoogleSheetsService.getDataUnitsPremium()
     await GoogleSheetsService.getDataPriceUnits()
+    await GoogleSheetsService.getDataPriceUnitsPremium()
     // await GoogleSheetsService.getDataDailyStrategy()
     // await GoogleSheetsService.getDataMonthlyStrategy()
     // await GoogleSheetsService.getDataRentalRate()
@@ -291,6 +313,12 @@ async function loadInitialData() {
     await GoogleSheetsService.getDataDailyStrategyPhase2()
     await GoogleSheetsService.getDataMonthlyStrategyPhase1()
     await GoogleSheetsService.getDataDailyStrategyPhase1()
+    await GoogleSheetsService.getDataMonthlyStrategyPhase3Premium()
+    await GoogleSheetsService.getDataDailyStrategyPhase3Premium()
+    await GoogleSheetsService.getDataMonthlyStrategyPhase2Premium()
+    await GoogleSheetsService.getDataDailyStrategyPhase2Premium()
+    await GoogleSheetsService.getDataMonthlyStrategyPhase1Premium()
+    await GoogleSheetsService.getDataDailyStrategyPhase1Premium()
 
     loading.value = false
   } catch (err) {
@@ -353,13 +381,13 @@ function increaseFinishingPrice(price) {
 
   let finishingCost = 0;
 
-  if (unitDataTypology.includes('2Br')) {
-    finishingCost = 275000000; // 275 IDR million
-  } else if (unitDataTypology.includes('3Br')) {
-    finishingCost = 450000000; // 450 IDR million
-  } else if (unitDataTypology.includes('4Br')) {
-    finishingCost = 525000000; // 525 IDR million
-  }
+  // if (unitDataTypology.includes('2Br')) {
+  //   finishingCost = 275000000; // 275 IDR million
+  // } else if (unitDataTypology.includes('3Br')) {
+  //   finishingCost = 450000000; // 450 IDR million
+  // } else if (unitDataTypology.includes('4Br')) {
+  //   finishingCost = 525000000; // 525 IDR million
+  // }
 
   finishingPrice += finishingCost;
 
